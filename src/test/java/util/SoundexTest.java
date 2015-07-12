@@ -1,6 +1,8 @@
 package util;
 
 import org.junit.*;
+import org.junit.runner.*;
+import testutil.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -30,7 +32,7 @@ import static org.hamcrest.CoreMatchers.*;
 // Read additional comments in each test and follow any additional rules specified.
 // Please do not prematurely un-ignore any tests.
 
-//@RunWith(IncrementalRunner.class)
+@RunWith(IncrementalRunner.class)
 public class SoundexTest {
    private Soundex soundex;
 
