@@ -40,17 +40,9 @@ public class SoundexTest {
    }
 
    @Test
-   public void retainsSoleLetterOfOneLetterWord() {
-      assertThat(soundex.encode("A"), is(equalTo("A")));
-   }
-
-   @Test
    @Ignore
-   public void padsWithZerosToEnsureThreeDigits() {
-      assertThat(soundex.encode("I"), is(equalTo("I000")));
-
-      // When you get this test to pass, you will need to
-      // fix the specification in the prior test.
+   public void retainsSoleLetterOfOneLetterWord() {
+      assertThat(soundex.encode("A"), is(equalTo("A000")));
    }
 
    @Test
