@@ -1,6 +1,5 @@
 package util;
 
-import static org.junit.Assert.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,16 +22,6 @@ public class DateUtil {
 
    public static Date tomorrow() {
       return addDays(new Date(), 1);
-   }
-
-   public static void assertDateEquals(Date expectedDate, Date actualDate) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(expectedDate);
-      int expectedYear = calendar.get(YEAR);
-      int expectedDayOfYear = calendar.get(DAY_OF_YEAR);
-      calendar.setTime(actualDate);
-      assertEquals(expectedYear, calendar.get(YEAR));
-      assertEquals(expectedDayOfYear, calendar.get(DAY_OF_YEAR));
    }
 
    // this stinks
