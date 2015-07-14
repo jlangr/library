@@ -1,7 +1,3 @@
-Download Instructions
----
-git clone https://github.com/jlangr/library.git
-
 Eclipse Instructions
 ---
 
@@ -14,3 +10,6 @@ You should see 229 passing (green) unit tests.
 
 JetBrains IDEA  Instructions
 ---
+
+* In IntelliJ IDEA Preferences:
+  - Under `Build, Execution, Deployment->Build Tools->Maven->Importing`, check `Import Maven Projects automatically.
