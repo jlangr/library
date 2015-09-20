@@ -1,6 +1,6 @@
 There are of course gobs of ways to load projects into Eclipse or IDEA. The following two are based on Maven and the pom file included in the project. You might also have luck with simply loading the appropriate project file.
 
-You will need JDK 7 or 8 installed. The EOL'ed 6 should work with perhaps a few small changes.
+You will need JDK 7 or 8 installed. The end-of-life'd JDK 6 should work with perhaps a few small changes.
 
 Please don't hesitate to contact me at jeff @ langrsoft.com if you have any problems.
 
