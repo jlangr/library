@@ -6,33 +6,50 @@ import testutil.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-// Implementation of Soundex (http://en.wikipedia.org/wiki/Soundex)
-// The rules, per Wikipedia:
-// 1. Retain the first letter of the name and drop all other occurrences of a,e,i,o,u,y,h,w.
-// 2. Replace consonants with digits as follows (after the first letter):
-//     b, f, p, v => 1
-//     c, g, j, k, q, s, x, z => 2
-//     d, t => 3
-//     l => 4
-//     m, n => 5
-//     r => 6
-// 3. Two adjacent letters (in the original name) with the same number are coded as a single
-//    number; also two letters with the same number separated by 'h' or 'w' are coded as a
-//    single number, whereas such letters separated by a vowel are coded twice. This rule
-//    also applies to the first letter.
-// 4. Continue until you have one letter and three numbers. If you run out of letters, fill
-//    in 0s until there are three numbers.
+//Implementing the Soundex Algorithm--Test-First
+//
+//Per Wikipedia, Soundex is a phonetic algorithm for indexing names
+//by sound, as pronounced in English. The goal is for homophones to
+//be encoded to the same representation so that they can be matched
+//despite minor differences in spelling.
+//
+//Each @Test method in SoundexTest.java describes a small increment
+//of behavior needed to build the Soundex algorithm.
+//
+//For each test from top to bottom:
+//- Remove the @Ignore annotation
+//- Run all tests. Ensure the newly-unignored (current) test fails,
+//  and that all other previously passing tests still pass.
+//- Write code in Soundex.java to get the current test to pass.
+//  Build no more implementation than required.
+//
+//You'll find a couple very useful helper methods in Soundex.java.
+//Use these so you can focus on incrementing the core algorithm.
+//
+//If you un-ignore a test and it immediately passes,
+//you wrote too much code to get a prior test to pass.
+//Return to the prior step and find a way to get prior tests
+//passing with the minimal code needed.
+//
+//Read additional comments in each test and follow any additional rules specified.
+//
+//The rules for Soundex, per Wikipedia (http://en.wikipedia.org/wiki/Soundex):
+//1. Retain the first letter of the name and drop all other occurrences of a,e,i,o,u,y,h,w.
+//2. Replace consonants with digits as follows (after the first letter):
+//    b, f, p, v => 1
+//    c, g, j, k, q, s, x, z => 2
+//    d, t => 3
+//    l => 4
+//    m, n => 5
+//    r => 6
+//3. Two adjacent letters (in the original name) with the same number are coded as a single
+//   number; also two letters with the same number separated by 'h' or 'w' are coded as a
+//   single number, whereas such letters separated by a vowel are coded twice. This rule
+//   also applies to the first letter.
+//4. Continue until you have one letter and three numbers. If you run out of letters, fill
+//   in 0s until there are three numbers.
 
-// For each test from top to bottom:
-// - ensure all tests pass
-// - remove the @Ignore annotation
-// - run all tests. Ensure the newly-unignored test ("current") fails.
-// - get the current test to pass. Build no more implementation than required.
-//   Tests will fail if you implement too much.
-// Read additional comments in each test and follow any additional rules specified.
-// Please do not prematurely un-ignore any tests.
 
-@RunWith(IncrementalRunner.class)
 public class SoundexTest {
    private Soundex soundex;
 

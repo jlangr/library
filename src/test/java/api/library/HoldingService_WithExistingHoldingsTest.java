@@ -30,7 +30,7 @@ public class HoldingService_WithExistingHoldingsTest {
    }
 
    private void addPatron() {
-      joeId = new PatronService().addWithValidCredit("joe");
+      joeId = new PatronService().add("joe");
    }
 
    private void addTwoBranches() {
