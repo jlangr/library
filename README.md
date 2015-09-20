@@ -36,4 +36,4 @@ JetBrains IDEA Instructions
 * Click `OK`.
 * From the IntelliJ IDEA menu, select `Run->Run 'All Tests'`.
 
-You should see 229 passing (green) unit tests.
+You should see 226 passing (green) unit tests.
