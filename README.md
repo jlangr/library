@@ -14,7 +14,7 @@ Eclipse Instructions
 * From the `Package Explorer`, select the `library` project.
 * From the context (right-click) menu, select `Run As->JUnit Test`.
 
-You should see 220 passing (green) unit tests.
+You should see 198 passing (green) unit tests.
 
 JetBrains IDEA Instructions
 ---
@@ -36,4 +36,4 @@ JetBrains IDEA Instructions
 * Click `OK`.
 * From the IntelliJ IDEA menu, select `Run->Run 'All Tests'`.
 
-You should see 220 passing (green) unit tests.
+You should see 198 passing (green) unit tests.
