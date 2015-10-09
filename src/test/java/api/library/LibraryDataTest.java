@@ -3,9 +3,7 @@ package api.library;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import com.loc.material.api.MaterialType;
-
+import com.loc.material.api.*;
 import domain.core.*;
 
 public class LibraryDataTest {
@@ -17,8 +15,7 @@ public class LibraryDataTest {
       new BranchService().add("");
 
       MockHoldingService holdingService = new MockHoldingService();
-      holdingService.addTestBookToMaterialService("123", "", "",
-            MaterialType.Book, "");
+      holdingService.addTestBookToMaterialService(new MaterialDetails("", "", "123", MaterialType.Book, ""));
       holdingService.add("123:1", Branch.CHECKED_OUT.getScanCode());
 
       LibraryData.deleteAll();

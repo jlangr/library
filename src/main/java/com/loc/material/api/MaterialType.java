@@ -14,21 +14,6 @@ public enum MaterialType {
 
    private int checkoutPeriod;
    private int dailyFine;
-   public static final int TYPE_NEW_RELEASE = 2;
-   public static final int TYPE_MOVIE = 1;
-   public static final int TYPE_BOOK = 0;
-
-   public static MaterialType from(int value) {
-      switch(value) {
-         case MaterialType.TYPE_BOOK:
-            return MaterialType.Book;
-         case MaterialType.TYPE_MOVIE:
-            return MaterialType.DVD;
-         case MaterialType.TYPE_NEW_RELEASE:
-            return MaterialType.DVD;
-      }
-      return MaterialType.Book;
-   }
 
    MaterialType(int checkoutPeriod) {
       this(checkoutPeriod, 10);
@@ -45,14 +30,5 @@ public enum MaterialType {
 
    public int getDailyFine() {
       return dailyFine;
-   }
-
-   public int getType() {
-      switch (this) {
-         case Book: return MaterialType.TYPE_BOOK;
-         case DVD: return MaterialType.TYPE_MOVIE;
-         case NewReleaseDVD: return MaterialType.TYPE_NEW_RELEASE;
-      }
-      return 0;
    }
 }

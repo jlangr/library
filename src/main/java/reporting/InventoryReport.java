@@ -30,7 +30,7 @@ public class InventoryReport {
    public String allBooks() {
       List<Record> records = new ArrayList<Record>();
       for (Holding holding: catalog) {
-         if (holding.getMaterial().getType() == MaterialType.TYPE_BOOK) {
+         if (holding.getMaterial().getFormat() == MaterialType.Book) {
             records.add(new Record(holding));
          }
       }

@@ -33,14 +33,14 @@ public class CatalogTest {
    }
 
    @Test
-   public void incrementsSizeWhenBookAdded() {
+   public void incrementsSizeWhenMaterialAdded() {
       catalog.add(new Holding(MaterialTestData.THE_TRIAL, BRANCH_EAST));
 
       assertEquals(1, catalog.size());
    }
 
    @Test
-   public void answersEmptyForNonexistentBook() {
+   public void answersEmptyForNonexistentMaterial() {
       assertTrue(catalog.findAll(KAFKA_CLASSIFICATION).isEmpty());
    }
 

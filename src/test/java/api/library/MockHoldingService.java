@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.loc.material.api.ClassificationApi;
 import com.loc.material.api.MaterialDetails;
-import com.loc.material.api.MaterialType;
 
 import domain.core.ClassificationApiFactory;
 
@@ -16,15 +15,7 @@ public class MockHoldingService extends HoldingService {
       ClassificationApiFactory.setService(classificationApi);
    }
 
-   public void addTestBookToMaterialService(MaterialDetails book) {
-      addTestBookToMaterialService(book.getClassification(), book.getAuthor(),
-            book.getTitle(), MaterialType.Book, book.getYear());
-   }
-
-   public void addTestBookToMaterialService(String classification,
-         String author, String title, MaterialType type, String year) {
-      MaterialDetails material = new MaterialDetails(author, title,
-            classification, type, year);
+   public void addTestBookToMaterialService(MaterialDetails material) {
       classificationApi.add(material);
    }
 

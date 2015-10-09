@@ -49,9 +49,9 @@ public class HoldingService_WithExistingHoldingsTest {
       agileJavaAtWest = addHolding(westScanCode, AGILE_JAVA, 1);
    }
 
-   private Holding addHolding(String branchScanCode, MaterialDetails book, int copyNumber) {
-      String holdingId = Holding.createBarCode(book.getClassification(), copyNumber);
-      service.addTestBookToMaterialService(book);
+   private Holding addHolding(String branchScanCode, MaterialDetails material, int copyNumber) {
+      String holdingId = Holding.createBarCode(material.getClassification(), copyNumber);
+      service.addTestBookToMaterialService(material);
 
       service.add(holdingId, branchScanCode);
       return service.find(holdingId);

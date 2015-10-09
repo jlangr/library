@@ -23,8 +23,7 @@ public class MaterialTestData {
    public static final MaterialDetails AGILE_JAVA = new MaterialDetails(LANGR_AUTHOR, LANGR_TITLE,
          LANGR_CLASSIFICATION, LANGR_YEAR);
    public static final MaterialDetails DR_STRANGELOVE = new MaterialDetails(STRANGELOVE_DIRECTOR,
-         STRANGELOVE_TITLE, STRANGELOVE_CLASSIFICATION, STRANGELOVE_YEAR,
-         MaterialType.TYPE_MOVIE);
+         STRANGELOVE_TITLE, STRANGELOVE_CLASSIFICATION, MaterialType.DVD, STRANGELOVE_YEAR);
    public static final MaterialDetails THE_TRIAL_NEW_EDITION = new MaterialDetails(KAFKA_AUTHOR,
-         KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, MaterialType.TYPE_BOOK);
+         KAFKA_TITLE, KAFKA_CLASSIFICATION, MaterialType.Book, KAFKA_YEAR);
 }

@@ -21,16 +21,6 @@ public class MaterialDetails {
       this(author, title, classification, MaterialType.Book, year);
    }
 
-
-   public MaterialDetails(String author, String title, String classification,
-         String year, int format) {
-      this.author = author;
-      this.title = title;
-      this.classification = classification;
-      this.format = MaterialType.from(format);
-      this.year = year;
-   }
-
    public String getClassification() {
       return classification;
    }
@@ -49,10 +39,6 @@ public class MaterialDetails {
 
    public MaterialType getFormat() {
       return format;
-   }
-
-   public int getType() {
-      return format.getType();
    }
 
    @Override

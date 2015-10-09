@@ -72,7 +72,7 @@ public class Holding {
    }
 
    private int getHoldingPeriod() {
-      return MaterialType.from(material.getType()).getCheckoutPeriod();
+      return material.getFormat().getCheckoutPeriod();
    }
 
    public int checkIn(Date date, Branch branch) {

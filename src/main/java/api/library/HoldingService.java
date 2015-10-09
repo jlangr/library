@@ -14,7 +14,12 @@ public class HoldingService {
    }
 
    private Holding create(String holdingBarcode, String branchId) {
-      return new Holding(createBookOrMovie(getMaterialDetails(holdingBarcode)), findBranch(branchId),
+      String classification = HoldingBarcode.getClassification(holdingBarcode);
+      MaterialDetails material =
+            ClassificationApiFactory.getService().getMaterialDetails(classification);
+      if (material == null)
+         throw new InvalidClassificationException();
+      return new Holding(material, findBranch(branchId),
             HoldingBarcode.getCopyNumber(holdingBarcode));
    }
 
@@ -23,28 +28,11 @@ public class HoldingService {
          throw new DuplicateHoldingException();
    }
 
-   private MaterialDetails getMaterialDetails(String holdingId) {
-      MaterialDetails material = ClassificationApiFactory.getService().getMaterialDetails(
-            HoldingBarcode.getClassification(holdingId));
-      if (material == null)
-         throw new InvalidClassificationException();
-      return material;
-   }
-
    private Branch findBranch(String branchId) {
       Branch branch = new BranchService().find(branchId);
       if (branch == null)
          throw new BranchNotFoundException("Branch not found: " + branchId);
       return branch;
-   }
-
-   private MaterialDetails createBookOrMovie(MaterialDetails material) {
-      return new MaterialDetails(material.getAuthor(), material.getTitle(), material.getClassification(),
-            material.getYear(), getType(material));
-   }
-
-   private int getType(MaterialDetails material) {
-      return material.getFormat() == MaterialType.DVD ? MaterialType.TYPE_MOVIE : MaterialType.TYPE_BOOK;
    }
 
    public boolean isAvailable(String barCode) {
@@ -91,6 +79,7 @@ public class HoldingService {
       patronAccess.addHoldingToPatron(patron, holding);
    }
 
+   @SuppressWarnings("incomplete-switch")
    public int checkIn(String barCode, Date date, String branchScanCode) {
       Branch branch = new BranchService().find(branchScanCode);
       Holding hld = find(barCode);
@@ -132,16 +121,16 @@ public class HoldingService {
 
       if (isLate) {
          int daysLate = hld.daysLate(); // calculate # of days past due
-         int fineBasis = MaterialType.from(MaterialType.TYPE_BOOK).getDailyFine();
-         switch (hld.getMaterial().getType()) {
-            case MaterialType.TYPE_BOOK:
+         int fineBasis = hld.getMaterial().getFormat().getDailyFine();
+         switch (hld.getMaterial().getFormat()) {
+            case Book:
                f.addFine(fineBasis * daysLate);
                break;
-            case MaterialType.TYPE_MOVIE:
+            case DVD:
                int fine = Math.min(1000, 100 + fineBasis * daysLate);
                f.addFine(fine);
                break;
-            case MaterialType.TYPE_NEW_RELEASE:
+            case NewReleaseDVD:
                f.addFine(fineBasis * daysLate);
                break;
          }

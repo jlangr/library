@@ -23,7 +23,7 @@ public class HoldingTest {
 
    @Test
    public void create() {
-      assertBook(THE_TRIAL, holding);
+      assertMaterial(THE_TRIAL, holding);
       assertEquals(BranchTest.BRANCH_EAST, holding.getBranch());
       assertEquals(1, holding.getCopyNumber());
    }
@@ -152,16 +152,16 @@ public class HoldingTest {
       assertThat(daysLate, is(3));
    }
 
-   private void checkOutToday(MaterialDetails book, Branch branch) {
-      holding = new Holding(book, branch);
+   private void checkOutToday(MaterialDetails material, Branch branch) {
+      holding = new Holding(material, branch);
       holding.checkOut(TODAY);
    }
 
-   static void assertContains(List<Holding> holdings, MaterialDetails expectedBook) {
-      assertBook(expectedBook, holdings.get(0));
+   static void assertContains(List<Holding> holdings, MaterialDetails expectedMaterial) {
+      assertMaterial(expectedMaterial, holdings.get(0));
    }
 
-   static void assertBook(MaterialDetails expected, Holding holding) {
+   static void assertMaterial(MaterialDetails expected, Holding holding) {
       MaterialTest.assertMaterialsEqual(expected, holding.getMaterial());
    }
 
