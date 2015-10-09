@@ -107,7 +107,7 @@ public class HoldingService {
       for (Patron p: new PatronService().allPatrons()) {
          holdings = p.holdings();
          for (Holding patHld: holdings) {
-            if (hld.getBook().equals(patHld.getBook()))
+            if (hld.getBarCode().equals(patHld.getBarCode()))
                f = p;
          }
       }
