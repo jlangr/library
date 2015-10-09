@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.*;
 import org.junit.*;
+import com.loc.material.api.*;
 import persistence.*;
 import util.*;
 import domain.core.*;
@@ -184,7 +185,7 @@ public class HoldingService_WithExistingHoldingsTest {
       Date oneDayLate = DateUtil.addDays(holding.dateDue(), 1);
       service.checkIn(barCode, oneDayLate, eastScanCode);
 
-      assertEquals(Material.BOOK_DAILY_FINE, retrieve(joeId).fineBalance());
+      assertEquals(MaterialType.Book.getDailyFine(), retrieve(joeId).fineBalance());
    }
 
    private Patron retrieve(String id) {

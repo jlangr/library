@@ -44,7 +44,7 @@ public class HoldingService {
    }
 
    private int getType(MaterialDetails material) {
-      return material.getFormat() == MaterialType.DVD ? Material.TYPE_MOVIE : Material.TYPE_BOOK;
+      return material.getFormat() == MaterialType.DVD ? MaterialType.TYPE_MOVIE : MaterialType.TYPE_BOOK;
    }
 
    public boolean isAvailable(String barCode) {
@@ -132,16 +132,17 @@ public class HoldingService {
 
       if (isLate) {
          int daysLate = hld.daysLate(); // calculate # of days past due
+         int fineBasis = MaterialType.from(MaterialType.TYPE_BOOK).getDailyFine();
          switch (hld.getMaterial().getType()) {
-            case Material.TYPE_BOOK:
-               f.addFine(Material.BOOK_DAILY_FINE * daysLate);
+            case MaterialType.TYPE_BOOK:
+               f.addFine(fineBasis * daysLate);
                break;
-            case Material.TYPE_MOVIE:
-               int fine = Math.min(1000, 100 + Material.MOVIE_DAILY_FINE * daysLate);
+            case MaterialType.TYPE_MOVIE:
+               int fine = Math.min(1000, 100 + fineBasis * daysLate);
                f.addFine(fine);
                break;
-            case Material.TYPE_NEW_RELEASE:
-               f.addFine(Material.NEW_RELEASE_DAILY_FINE * daysLate);
+            case MaterialType.TYPE_NEW_RELEASE:
+               f.addFine(fineBasis * daysLate);
                break;
          }
          return daysLate;

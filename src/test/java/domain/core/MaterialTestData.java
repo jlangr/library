@@ -1,5 +1,7 @@
 package domain.core;
 
+import com.loc.material.api.*;
+
 public class MaterialTestData {
    static final String LANGR_YEAR = "2005";
    public static final String LANGR_CLASSIFICATION = "LAN888";
@@ -22,7 +24,7 @@ public class MaterialTestData {
          LANGR_CLASSIFICATION, LANGR_YEAR);
    public static final Material DR_STRANGELOVE = new Material(STRANGELOVE_DIRECTOR,
          STRANGELOVE_TITLE, STRANGELOVE_CLASSIFICATION, STRANGELOVE_YEAR,
-         Material.TYPE_MOVIE);
+         MaterialType.TYPE_MOVIE);
    public static final Material THE_TRIAL_NEW_EDITION = new Material(KAFKA_AUTHOR,
-         KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, Material.TYPE_NEW_RELEASE);
+         KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, MaterialType.TYPE_BOOK);
 }

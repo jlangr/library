@@ -2,6 +2,7 @@ package domain.core;
 
 import java.util.Calendar;
 import java.util.Date;
+import com.loc.material.api.*;
 import util.*;
 
 public class Holding {
@@ -71,23 +72,7 @@ public class Holding {
    }
 
    private int getHoldingPeriod() {
-      int period = 0;
-
-      switch (material.getType()) {
-         case Material.TYPE_BOOK:
-            period = Material.BOOK_CHECKOUT_PERIOD;
-            break;
-         case Material.TYPE_MOVIE:
-            period = Material.MOVIE_CHECKOUT_PERIOD;
-            break;
-         case Material.TYPE_NEW_RELEASE:
-            period = Material.NEW_RELEASE_CHECKOUT_PERIOD;
-            break;
-         default:
-            period = Material.BOOK_CHECKOUT_PERIOD;
-            break;
-      }
-      return period;
+      return MaterialType.from(material.getType()).getCheckoutPeriod();
    }
 
    public int checkIn(Date date, Branch branch) {

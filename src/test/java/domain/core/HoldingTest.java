@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.*;
-
+import com.loc.material.api.*;
 import testutil.*;
 import util.*;
 
@@ -108,21 +108,20 @@ public class HoldingTest {
    public void returnDateForStandardBook() {
       holding.checkOut(TODAY);
       Date dateDue = holding.dateDue();
-      assertDateEquals(addDays(TODAY, Material.BOOK_CHECKOUT_PERIOD), dateDue);
+      assertDateEquals(addDays(TODAY, MaterialType.Book.getCheckoutPeriod()), dateDue);
    }
 
    @Test
    public void testSomething() {
       // movie
       checkOutToday(DR_STRANGELOVE, BranchTest.BRANCH_EAST);
-      Date expected = addDays(TODAY, Material.MOVIE_CHECKOUT_PERIOD);
-      assertDateEquals(addDays(TODAY, Material.MOVIE_CHECKOUT_PERIOD), holding.dateDue());
+      Date expected = addDays(TODAY, MaterialType.DVD.getCheckoutPeriod());
+      assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), holding.dateDue());
 
       // childrens movie
       checkOutToday(THE_TRIAL_NEW_EDITION, BranchTest.BRANCH_EAST);
-      expected = addDays(TODAY, Material.NEW_RELEASE_CHECKOUT_PERIOD);
-      assertDateEquals(expected,
-            holding.dateDue());
+      expected = addDays(TODAY, MaterialType.Book.getCheckoutPeriod());
+      assertDateEquals(expected, holding.dateDue());
    }
 
    @Test

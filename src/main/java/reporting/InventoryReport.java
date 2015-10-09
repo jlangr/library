@@ -3,10 +3,8 @@ package reporting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import domain.core.Material;
-import domain.core.Catalog;
-import domain.core.Holding;
+import com.loc.material.api.*;
+import domain.core.*;
 
 public class InventoryReport {
    private static final String NEWLINE = System.getProperty("line.separator");
@@ -32,7 +30,7 @@ public class InventoryReport {
    public String allBooks() {
       List<Record> records = new ArrayList<Record>();
       for (Holding holding: catalog) {
-         if (holding.getMaterial().getType() == Material.TYPE_BOOK) {
+         if (holding.getMaterial().getType() == MaterialType.TYPE_BOOK) {
             records.add(new Record(holding));
          }
       }
