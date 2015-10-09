@@ -17,6 +17,12 @@ public class MaterialDetails {
    }
 
    public MaterialDetails(String author, String title, String classification,
+         String year) {
+      this(author, title, classification, MaterialType.Book, year);
+   }
+
+
+   public MaterialDetails(String author, String title, String classification,
          String year, int format) {
       this.author = author;
       this.title = title;

@@ -38,8 +38,8 @@ public class HoldingService {
       return branch;
    }
 
-   private Material createBookOrMovie(MaterialDetails material) {
-      return new Material(material.getAuthor(), material.getTitle(), material.getClassification(),
+   private MaterialDetails createBookOrMovie(MaterialDetails material) {
+      return new MaterialDetails(material.getAuthor(), material.getTitle(), material.getClassification(),
             material.getYear(), getType(material));
    }
 

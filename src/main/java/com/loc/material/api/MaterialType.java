@@ -1,7 +1,5 @@
 package com.loc.material.api;
 
-import domain.core.*;
-
 public enum MaterialType {
    Book(21, 10),
    AudioCassette(14, 10),

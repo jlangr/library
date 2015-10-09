@@ -7,27 +7,27 @@ import util.*;
 
 public class Holding {
    public static final String BARCODE_SEPARATOR = ":";
-   private Material material;
+   private MaterialDetails material;
    private Branch branch;
    private Date dateCheckedOut;
    private Date dateLastCheckedIn;
    private int copyNumber;
 
-   public Holding(Material material) {
+   public Holding(MaterialDetails material) {
       this(material, Branch.CHECKED_OUT);
    }
 
-   public Holding(Material material, Branch branch) {
+   public Holding(MaterialDetails material, Branch branch) {
       this(material, branch, 1);
    }
 
-   public Holding(Material material, Branch branch, int copyNumber) {
+   public Holding(MaterialDetails material, Branch branch, int copyNumber) {
       this.material = material;
       this.branch = branch;
       this.copyNumber = copyNumber;
    }
 
-   public Material getMaterial() {
+   public MaterialDetails getMaterial() {
       return material;
    }
 

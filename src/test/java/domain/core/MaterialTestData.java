@@ -18,13 +18,13 @@ public class MaterialTestData {
    static final String STRANGELOVE_TITLE = "Dr. Strangelove";
    static final String STRANGELOVE_YEAR = "1992"; // date of video release
 
-   public static final Material THE_TRIAL = new Material(KAFKA_AUTHOR, KAFKA_TITLE,
+   public static final MaterialDetails THE_TRIAL = new MaterialDetails(KAFKA_AUTHOR, KAFKA_TITLE,
          KAFKA_CLASSIFICATION, KAFKA_YEAR);
-   public static final Material AGILE_JAVA = new Material(LANGR_AUTHOR, LANGR_TITLE,
+   public static final MaterialDetails AGILE_JAVA = new MaterialDetails(LANGR_AUTHOR, LANGR_TITLE,
          LANGR_CLASSIFICATION, LANGR_YEAR);
-   public static final Material DR_STRANGELOVE = new Material(STRANGELOVE_DIRECTOR,
+   public static final MaterialDetails DR_STRANGELOVE = new MaterialDetails(STRANGELOVE_DIRECTOR,
          STRANGELOVE_TITLE, STRANGELOVE_CLASSIFICATION, STRANGELOVE_YEAR,
          MaterialType.TYPE_MOVIE);
-   public static final Material THE_TRIAL_NEW_EDITION = new Material(KAFKA_AUTHOR,
+   public static final MaterialDetails THE_TRIAL_NEW_EDITION = new MaterialDetails(KAFKA_AUTHOR,
          KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, MaterialType.TYPE_BOOK);
 }

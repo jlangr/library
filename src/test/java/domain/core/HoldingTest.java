@@ -152,17 +152,17 @@ public class HoldingTest {
       assertThat(daysLate, is(3));
    }
 
-   private void checkOutToday(Material book, Branch branch) {
+   private void checkOutToday(MaterialDetails book, Branch branch) {
       holding = new Holding(book, branch);
       holding.checkOut(TODAY);
    }
 
-   static void assertContains(List<Holding> holdings, Material expectedBook) {
+   static void assertContains(List<Holding> holdings, MaterialDetails expectedBook) {
       assertBook(expectedBook, holdings.get(0));
    }
 
-   static void assertBook(Material expectedBook, Holding holding) {
-      MaterialTest.assertMaterialsEqual(expectedBook, holding.getMaterial());
+   static void assertBook(MaterialDetails expected, Holding holding) {
+      MaterialTest.assertMaterialsEqual(expected, holding.getMaterial());
    }
 
    public static Date addDays(Date date, int days) {
