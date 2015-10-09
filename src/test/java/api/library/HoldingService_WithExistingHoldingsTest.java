@@ -1,6 +1,6 @@
 package api.library;
 
-import static domain.core.BookTestData.*;
+import static domain.core.MaterialTestData.*;
 import static domain.core.BranchTest.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -48,7 +48,7 @@ public class HoldingService_WithExistingHoldingsTest {
       agileJavaAtWest = addHolding(westScanCode, AGILE_JAVA, 1);
    }
 
-   private Holding addHolding(String branchScanCode, Book book, int copyNumber) {
+   private Holding addHolding(String branchScanCode, Material book, int copyNumber) {
       String holdingId = Holding.createBarCode(book.getClassification(), copyNumber);
       service.addTestBookToMaterialService(book);
 
@@ -184,7 +184,7 @@ public class HoldingService_WithExistingHoldingsTest {
       Date oneDayLate = DateUtil.addDays(holding.dateDue(), 1);
       service.checkIn(barCode, oneDayLate, eastScanCode);
 
-      assertEquals(Book.BOOK_DAILY_FINE, retrieve(joeId).fineBalance());
+      assertEquals(Material.BOOK_DAILY_FINE, retrieve(joeId).fineBalance());
    }
 
    private Patron retrieve(String id) {

@@ -15,11 +15,11 @@ public class HoldingStore {
    }
 
    public void save(Holding holding) {
-      holdings.put(holding.getBook().getClassification(), copy(holding));
+      holdings.put(holding.getMaterial().getClassification(), copy(holding));
    }
 
    private Holding copy(Holding holding) {
-      return new Holding(holding.getBook(), holding.getBranch(),
+      return new Holding(holding.getMaterial(), holding.getBranch(),
             holding.getCopyNumber());
    }
 

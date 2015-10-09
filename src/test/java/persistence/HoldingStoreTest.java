@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import testutil.CollectionsUtil;
-import domain.core.BookTestData;
+import domain.core.MaterialTestData;
 import domain.core.Holding;
 
 public class HoldingStoreTest {
@@ -22,24 +22,24 @@ public class HoldingStoreTest {
    public void setUp() {
       HoldingStore.deleteAll();
       store = new HoldingStore();
-      savedHolding = new Holding(BookTestData.THE_TRIAL);
+      savedHolding = new Holding(MaterialTestData.THE_TRIAL);
       store.save(savedHolding);
    }
 
    @Test
    public void returnsAddedHoldings() {
-      List<Holding> retrieved = store.findAll(savedHolding.getBook()
+      List<Holding> retrieved = store.findAll(savedHolding.getMaterial()
             .getClassification());
 
-      assertEquals(savedHolding.getBook(),
-            CollectionsUtil.soleElement(retrieved).getBook());
+      assertEquals(savedHolding.getMaterial(),
+            CollectionsUtil.soleElement(retrieved).getMaterial());
    }
 
    @Test
    public void returnsNewInstanceOnRetrieval() {
       store = new HoldingStore();
 
-      List<Holding> retrieved = store.findAll(savedHolding.getBook()
+      List<Holding> retrieved = store.findAll(savedHolding.getMaterial()
             .getClassification());
 
       assertNotSame(savedHolding, CollectionsUtil.soleElement(retrieved));
@@ -47,7 +47,7 @@ public class HoldingStoreTest {
 
    @Test
    public void getAllReturnsAllSavedHoldings() {
-      Holding holding2 = new Holding(BookTestData.AGILE_JAVA);
+      Holding holding2 = new Holding(MaterialTestData.AGILE_JAVA);
       store.save(holding2);
 
       Collection<Holding> retrieved = store.getAll();
@@ -57,12 +57,12 @@ public class HoldingStoreTest {
 
    @Test
    public void findBarCodeReturnsMatchingHolding() {
-      String barCode = Holding.createBarCode(BookTestData.KAFKA_CLASSIFICATION,
+      String barCode = Holding.createBarCode(MaterialTestData.KAFKA_CLASSIFICATION,
             1);
 
       Holding holding = store.find(barCode);
 
-      assertEquals(BookTestData.THE_TRIAL, holding.getBook());
+      assertEquals(MaterialTestData.THE_TRIAL, holding.getMaterial());
       assertEquals(barCode, holding.getBarCode());
    }
 

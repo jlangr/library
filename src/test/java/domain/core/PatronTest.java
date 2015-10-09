@@ -30,7 +30,7 @@ public class PatronTest {
 
    @Test
    public void returnsHoldingsAdded() {
-      Holding holding = new Holding(BookTestData.THE_TRIAL, BranchTest.BRANCH_EAST);
+      Holding holding = new Holding(MaterialTestData.THE_TRIAL, BranchTest.BRANCH_EAST);
 
       jane.add(holding);
 
@@ -40,7 +40,7 @@ public class PatronTest {
 
    @Test
    public void removesHoldingFromPatron() {
-      Holding holding = new Holding(BookTestData.THE_TRIAL, BranchTest.BRANCH_EAST);
+      Holding holding = new Holding(MaterialTestData.THE_TRIAL, BranchTest.BRANCH_EAST);
       jane.add(holding);
 
       jane.remove(holding);

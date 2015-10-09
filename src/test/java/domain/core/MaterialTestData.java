@@ -1,7 +1,6 @@
 package domain.core;
 
-
-public class BookTestData {
+public class MaterialTestData {
    static final String LANGR_YEAR = "2005";
    public static final String LANGR_CLASSIFICATION = "LAN888";
    static final String LANGR_TITLE = "Agile Java";
@@ -17,13 +16,13 @@ public class BookTestData {
    static final String STRANGELOVE_TITLE = "Dr. Strangelove";
    static final String STRANGELOVE_YEAR = "1992"; // date of video release
 
-   public static final Book THE_TRIAL = new Book(KAFKA_AUTHOR, KAFKA_TITLE,
+   public static final Material THE_TRIAL = new Material(KAFKA_AUTHOR, KAFKA_TITLE,
          KAFKA_CLASSIFICATION, KAFKA_YEAR);
-   public static final Book AGILE_JAVA = new Book(LANGR_AUTHOR, LANGR_TITLE,
+   public static final Material AGILE_JAVA = new Material(LANGR_AUTHOR, LANGR_TITLE,
          LANGR_CLASSIFICATION, LANGR_YEAR);
-   public static final Book DR_STRANGELOVE = new Book(STRANGELOVE_DIRECTOR,
+   public static final Material DR_STRANGELOVE = new Material(STRANGELOVE_DIRECTOR,
          STRANGELOVE_TITLE, STRANGELOVE_CLASSIFICATION, STRANGELOVE_YEAR,
-         Book.TYPE_MOVIE);
-   public static final Book THE_TRIAL_NEW_EDITION = new Book(KAFKA_AUTHOR,
-         KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, Book.TYPE_NEW_RELEASE);
+         Material.TYPE_MOVIE);
+   public static final Material THE_TRIAL_NEW_EDITION = new Material(KAFKA_AUTHOR,
+         KAFKA_TITLE, KAFKA_CLASSIFICATION, KAFKA_YEAR, Material.TYPE_NEW_RELEASE);
 }

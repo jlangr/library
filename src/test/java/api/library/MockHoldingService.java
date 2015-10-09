@@ -6,7 +6,7 @@ import com.loc.material.api.ClassificationApi;
 import com.loc.material.api.MaterialDetails;
 import com.loc.material.api.MaterialType;
 
-import domain.core.Book;
+import domain.core.Material;
 import domain.core.ClassificationApiFactory;
 
 public class MockHoldingService extends HoldingService {
@@ -17,7 +17,7 @@ public class MockHoldingService extends HoldingService {
       ClassificationApiFactory.setService(classificationApi);
    }
 
-   public void addTestBookToMaterialService(Book book) {
+   public void addTestBookToMaterialService(Material book) {
       addTestBookToMaterialService(book.getClassification(), book.getAuthor(),
             book.getTitle(), MaterialType.Book, book.getYear());
    }

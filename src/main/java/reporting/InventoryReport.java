@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import domain.core.Book;
+import domain.core.Material;
 import domain.core.Catalog;
 import domain.core.Holding;
 
@@ -32,7 +32,7 @@ public class InventoryReport {
    public String allBooks() {
       List<Record> records = new ArrayList<Record>();
       for (Holding holding: catalog) {
-         if (holding.getBook().getType() == Book.TYPE_BOOK) {
+         if (holding.getMaterial().getType() == Material.TYPE_BOOK) {
             records.add(new Record(holding));
          }
       }
@@ -109,11 +109,11 @@ public class InventoryReport {
       String isbn;
 
       public Record(Holding holding) {
-         this.title = holding.getBook().getTitle();
+         this.title = holding.getMaterial().getTitle();
          this.branch = holding.getBranch().getName();
-         this.author = holding.getBook().getAuthor();
-         this.year = holding.getBook().getYear();
-         this.isbn = congress.getISBN(holding.getBook().getClassification());
+         this.author = holding.getMaterial().getAuthor();
+         this.year = holding.getMaterial().getYear();
+         this.isbn = congress.getISBN(holding.getMaterial().getClassification());
       }
 
       @Override

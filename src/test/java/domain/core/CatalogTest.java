@@ -1,9 +1,9 @@
 package domain.core;
 
-import static domain.core.BookTestData.AGILE_JAVA;
-import static domain.core.BookTestData.KAFKA_CLASSIFICATION;
-import static domain.core.BookTestData.LANGR_CLASSIFICATION;
-import static domain.core.BookTestData.THE_TRIAL;
+import static domain.core.MaterialTestData.AGILE_JAVA;
+import static domain.core.MaterialTestData.KAFKA_CLASSIFICATION;
+import static domain.core.MaterialTestData.LANGR_CLASSIFICATION;
+import static domain.core.MaterialTestData.THE_TRIAL;
 import static domain.core.BranchTest.BRANCH_EAST;
 import static domain.core.BranchTest.BRANCH_WEST;
 import static org.junit.Assert.assertEquals;
@@ -34,7 +34,7 @@ public class CatalogTest {
 
    @Test
    public void incrementsSizeWhenBookAdded() {
-      catalog.add(new Holding(BookTestData.THE_TRIAL, BRANCH_EAST));
+      catalog.add(new Holding(MaterialTestData.THE_TRIAL, BRANCH_EAST));
 
       assertEquals(1, catalog.size());
    }

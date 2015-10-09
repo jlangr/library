@@ -1,6 +1,6 @@
 package domain.core;
 
-import static domain.core.BookTestData.*;
+import static domain.core.MaterialTestData.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.*;
@@ -108,19 +108,19 @@ public class HoldingTest {
    public void returnDateForStandardBook() {
       holding.checkOut(TODAY);
       Date dateDue = holding.dateDue();
-      assertDateEquals(addDays(TODAY, Book.BOOK_CHECKOUT_PERIOD), dateDue);
+      assertDateEquals(addDays(TODAY, Material.BOOK_CHECKOUT_PERIOD), dateDue);
    }
 
    @Test
    public void testSomething() {
       // movie
       checkOutToday(DR_STRANGELOVE, BranchTest.BRANCH_EAST);
-      Date expected = addDays(TODAY, Book.MOVIE_CHECKOUT_PERIOD);
-      assertDateEquals(addDays(TODAY, Book.MOVIE_CHECKOUT_PERIOD), holding.dateDue());
+      Date expected = addDays(TODAY, Material.MOVIE_CHECKOUT_PERIOD);
+      assertDateEquals(addDays(TODAY, Material.MOVIE_CHECKOUT_PERIOD), holding.dateDue());
 
       // childrens movie
       checkOutToday(THE_TRIAL_NEW_EDITION, BranchTest.BRANCH_EAST);
-      expected = addDays(TODAY, Book.NEW_RELEASE_CHECKOUT_PERIOD);
+      expected = addDays(TODAY, Material.NEW_RELEASE_CHECKOUT_PERIOD);
       assertDateEquals(expected,
             holding.dateDue());
    }
@@ -153,17 +153,17 @@ public class HoldingTest {
       assertThat(daysLate, is(3));
    }
 
-   private void checkOutToday(Book book, Branch branch) {
+   private void checkOutToday(Material book, Branch branch) {
       holding = new Holding(book, branch);
       holding.checkOut(TODAY);
    }
 
-   static void assertContains(List<Holding> holdings, Book expectedBook) {
+   static void assertContains(List<Holding> holdings, Material expectedBook) {
       assertBook(expectedBook, holdings.get(0));
    }
 
-   static void assertBook(Book expectedBook, Holding holding) {
-      BookTest.assertBookEquals(expectedBook, holding.getBook());
+   static void assertBook(Material expectedBook, Holding holding) {
+      MaterialTest.assertMaterialsEqual(expectedBook, holding.getMaterial());
    }
 
    public static Date addDays(Date date, int days) {

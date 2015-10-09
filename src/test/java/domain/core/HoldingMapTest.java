@@ -15,8 +15,8 @@ import testutil.CollectionsUtil;
 
 public class HoldingMapTest {
    private HoldingMap map;
-   private static final Holding HOLDING1 = new Holding(BookTestData.THE_TRIAL);
-   private static final Holding HOLDING2 = new Holding(BookTestData.AGILE_JAVA);
+   private static final Holding HOLDING1 = new Holding(MaterialTestData.THE_TRIAL);
+   private static final Holding HOLDING2 = new Holding(MaterialTestData.AGILE_JAVA);
 
    @Before
    public void initialize() {

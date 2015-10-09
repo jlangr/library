@@ -64,7 +64,7 @@ public class PatronStoreTest {
 
    @Test
    public void storesHoldingsAddedToPatron() {
-      Holding holding = new Holding(BookTestData.THE_TRIAL, Branch.CHECKED_OUT);
+      Holding holding = new Holding(MaterialTestData.THE_TRIAL, Branch.CHECKED_OUT);
       store.add(joe);
       store.addHoldingToPatron(joe, holding);
 
@@ -74,13 +74,13 @@ public class PatronStoreTest {
       HoldingMap holdings = patron.holdings();
       assertEquals(1, holdings.size());
       Holding retrieved = holdings.get(holding.getBarCode());
-      assertEquals(BookTestData.THE_TRIAL, retrieved.getBook());
+      assertEquals(MaterialTestData.THE_TRIAL, retrieved.getMaterial());
       assertEquals(Branch.CHECKED_OUT, retrieved.getBranch());
    }
 
    @Test(expected = PatronNotFoundException.class)
    public void throwsWhenAddHoldingButPatronDoesNotExist() {
-      store.addHoldingToPatron(joe, new Holding(BookTestData.THE_TRIAL, Branch.CHECKED_OUT));
+      store.addHoldingToPatron(joe, new Holding(MaterialTestData.THE_TRIAL, Branch.CHECKED_OUT));
    }
 
    @Test

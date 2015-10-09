@@ -17,7 +17,7 @@ public class Catalog implements Iterable<Holding> {
    }
 
    public void add(Holding holding) {
-      List<Holding> existing = access.findAll(holding.getBook()
+      List<Holding> existing = access.findAll(holding.getMaterial()
             .getClassification());
       if (!existing.isEmpty())
          holding.setCopyNumber(existing.size() + 1);

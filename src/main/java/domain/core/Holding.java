@@ -6,28 +6,28 @@ import util.*;
 
 public class Holding {
    public static final String BARCODE_SEPARATOR = ":";
-   private Book book;
+   private Material material;
    private Branch branch;
    private Date dateCheckedOut;
    private Date dateLastCheckedIn;
    private int copyNumber;
 
-   public Holding(Book book) {
-      this(book, Branch.CHECKED_OUT);
+   public Holding(Material material) {
+      this(material, Branch.CHECKED_OUT);
    }
 
-   public Holding(Book book, Branch branch) {
-      this(book, branch, 1);
+   public Holding(Material material, Branch branch) {
+      this(material, branch, 1);
    }
 
-   public Holding(Book book, Branch branch, int copyNumber) {
-      this.book = book;
+   public Holding(Material material, Branch branch, int copyNumber) {
+      this.material = material;
       this.branch = branch;
       this.copyNumber = copyNumber;
    }
 
-   public Book getBook() {
-      return book;
+   public Material getMaterial() {
+      return material;
    }
 
    public Branch getBranch() {
@@ -73,18 +73,18 @@ public class Holding {
    private int getHoldingPeriod() {
       int period = 0;
 
-      switch (book.getType()) {
-         case Book.TYPE_BOOK:
-            period = Book.BOOK_CHECKOUT_PERIOD;
+      switch (material.getType()) {
+         case Material.TYPE_BOOK:
+            period = Material.BOOK_CHECKOUT_PERIOD;
             break;
-         case Book.TYPE_MOVIE:
-            period = Book.MOVIE_CHECKOUT_PERIOD;
+         case Material.TYPE_MOVIE:
+            period = Material.MOVIE_CHECKOUT_PERIOD;
             break;
-         case Book.TYPE_NEW_RELEASE:
-            period = Book.NEW_RELEASE_CHECKOUT_PERIOD;
+         case Material.TYPE_NEW_RELEASE:
+            period = Material.NEW_RELEASE_CHECKOUT_PERIOD;
             break;
          default:
-            period = Book.BOOK_CHECKOUT_PERIOD;
+            period = Material.BOOK_CHECKOUT_PERIOD;
             break;
       }
       return period;
@@ -102,7 +102,7 @@ public class Holding {
    }
 
    public String getBarCode() {
-      return createBarCode(book.getClassification(), copyNumber);
+      return createBarCode(material.getClassification(), copyNumber);
    }
 
    public void setCopyNumber(int copyNumber) {
@@ -125,7 +125,7 @@ public class Holding {
 
    @Override
    public String toString() {
-      return book.toString() + "(" + copyNumber + ") @ " + branch.getName();
+      return material.toString() + "(" + copyNumber + ") @ " + branch.getName();
    }
 
    @Override

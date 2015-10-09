@@ -1,6 +1,6 @@
 package domain.core;
 
-public class Book {
+public class Material {
    public static final int BOOK_CHECKOUT_PERIOD = 21; // days
    public static final int MOVIE_CHECKOUT_PERIOD = 7;
    public static final int NEW_RELEASE_CHECKOUT_PERIOD = 7;
@@ -19,11 +19,11 @@ public class Book {
    private String year;
    private int type;
 
-   public Book(String author, String title, String classification, String year) {
-      this(author, title, classification, year, Book.TYPE_BOOK);
+   public Material(String author, String title, String classification, String year) {
+      this(author, title, classification, year, Material.TYPE_BOOK);
    }
 
-   public Book(String author, String title, String classification, String year,
+   public Material(String author, String title, String classification, String year,
          int type) {
       this.author = author;
       this.title = title;

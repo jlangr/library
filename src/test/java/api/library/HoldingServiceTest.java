@@ -17,6 +17,11 @@ public class HoldingServiceTest {
    private MaterialDetails tessMaterial;
    private String westScanCode;
 
+   public MaterialDetails createTess(String classification) {
+      return new MaterialDetails("Hardy, Thomas", "Tess of the d'Urbervilles",
+            classification, MaterialType.Book, "1891");
+   }
+
    @Before
    public void initialize() {
       LibraryData.deleteAll();
@@ -26,7 +31,7 @@ public class HoldingServiceTest {
 
       westScanCode = new BranchService().add(WEST_BRANCH);
 
-      tessMaterial = MaterialTestData.createTess(CLASSIFICATION);
+      tessMaterial = createTess(CLASSIFICATION);
       when(classificationApi.getMaterialDetails(CLASSIFICATION)).thenReturn(
             tessMaterial);
    }
@@ -36,7 +41,7 @@ public class HoldingServiceTest {
       service.add(HOLDING_BARCODE, westScanCode);
 
       Holding holding = service.find(HOLDING_BARCODE);
-      assertThat(holding.getBook().getAuthor(), is(tessMaterial.getAuthor()));
+      assertThat(holding.getMaterial().getAuthor(), is(tessMaterial.getAuthor()));
    }
 
    @Test

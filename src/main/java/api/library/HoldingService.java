@@ -38,13 +38,13 @@ public class HoldingService {
       return branch;
    }
 
-   private Book createBookOrMovie(MaterialDetails material) {
-      return new Book(material.getAuthor(), material.getTitle(), material.getClassification(),
+   private Material createBookOrMovie(MaterialDetails material) {
+      return new Material(material.getAuthor(), material.getTitle(), material.getClassification(),
             material.getYear(), getType(material));
    }
 
    private int getType(MaterialDetails material) {
-      return material.getFormat() == MaterialType.DVD ? Book.TYPE_MOVIE : Book.TYPE_BOOK;
+      return material.getFormat() == MaterialType.DVD ? Material.TYPE_MOVIE : Material.TYPE_BOOK;
    }
 
    public boolean isAvailable(String barCode) {
@@ -132,16 +132,16 @@ public class HoldingService {
 
       if (isLate) {
          int daysLate = hld.daysLate(); // calculate # of days past due
-         switch (hld.getBook().getType()) {
-            case Book.TYPE_BOOK:
-               f.addFine(Book.BOOK_DAILY_FINE * daysLate);
+         switch (hld.getMaterial().getType()) {
+            case Material.TYPE_BOOK:
+               f.addFine(Material.BOOK_DAILY_FINE * daysLate);
                break;
-            case Book.TYPE_MOVIE:
-               int fine = Math.min(1000, 100 + Book.MOVIE_DAILY_FINE * daysLate);
+            case Material.TYPE_MOVIE:
+               int fine = Math.min(1000, 100 + Material.MOVIE_DAILY_FINE * daysLate);
                f.addFine(fine);
                break;
-            case Book.TYPE_NEW_RELEASE:
-               f.addFine(Book.NEW_RELEASE_DAILY_FINE * daysLate);
+            case Material.TYPE_NEW_RELEASE:
+               f.addFine(Material.NEW_RELEASE_DAILY_FINE * daysLate);
                break;
          }
          return daysLate;
