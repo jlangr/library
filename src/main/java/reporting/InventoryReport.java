@@ -114,8 +114,4 @@ public class InventoryReport {
          return this.title.compareTo(that.title);
       }
    }
-
-   public void createFooter(StringBuffer buffer) {
-      buffer.append("Made in China");
-   }
 }
