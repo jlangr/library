@@ -15,16 +15,10 @@ public class InventoryReport {
    private static final int YEAR_LENGTH = 6;
    private static final int ISBN_LENGTH = 10;
    private Catalog catalog;
-   private LibraryOfCongress congress;
-
-   public InventoryReport(
-         Catalog catalog, LibraryOfCongress libraryOfCongress) {
-      this.catalog = catalog;
-      this.congress = libraryOfCongress;
-   }
+   private LibraryOfCongress congress = new LibraryOfCongress();
 
    public InventoryReport(Catalog catalog) {
-      this(catalog, new LibraryOfCongress());
+      this.catalog = catalog;
    }
 
    public String allBooks() {
