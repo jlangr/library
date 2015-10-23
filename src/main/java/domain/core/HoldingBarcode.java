@@ -70,10 +70,14 @@ public class HoldingBarcode {
 
    @Override
    public String toString() {
-      return getBarcode();
+      return createCode(classification, copyNumber);
    }
 
    private String getBarcode() {
+      return classification + BARCODE_SEPARATOR + copyNumber;
+   }
+
+   public static String createCode(String classification, int copyNumber) {
       return classification + BARCODE_SEPARATOR + copyNumber;
    }
 

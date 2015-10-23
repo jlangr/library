@@ -38,6 +38,14 @@ public class Holding {
       return copyNumber;
    }
 
+   public String getBarCode() {
+      return HoldingBarcode.createCode(material.getClassification(), copyNumber);
+   }
+
+   public void setCopyNumber(int copyNumber) {
+      this.copyNumber = copyNumber;
+   }
+
    public void transfer(Branch newBranch) {
       branch = newBranch;
    }
@@ -66,24 +74,20 @@ public class Holding {
    public int checkIn(Date date, Branch branch) {
       this.dateLastCheckedIn = date;
       this.branch = branch;
-      int daysLate = DateUtil.daysFrom(dateDue(), dateLastCheckedIn);
-      return daysLate < 0 ? 0 : daysLate;
+      return daysLate();
+   }
+
+   public int daysLate() {
+      return DateUtil.daysAfter(dateDue(), dateLastCheckedIn());
    }
 
    public Date dateLastCheckedIn() {
       return dateLastCheckedIn;
    }
 
-   public String getBarCode() {
-      return createBarCode(material.getClassification(), copyNumber);
-   }
-
-   public void setCopyNumber(int copyNumber) {
-      this.copyNumber = copyNumber;
-   }
-
-   public static String createBarCode(String classification, int copyNumber) {
-      return classification + BARCODE_SEPARATOR + copyNumber;
+   @Override
+   public int hashCode() {
+      return getBarCode().hashCode();
    }
 
    @Override
@@ -99,45 +103,5 @@ public class Holding {
    @Override
    public String toString() {
       return material.toString() + "(" + copyNumber + ") @ " + branch.getName();
-   }
-
-   @Override
-   public int hashCode() {
-      return getBarCode().hashCode();
-   }
-
-   public static int getCopyNumber(String barcode) {
-      String copy = splitOnColon(barcode)[1];
-      return parsePositiveInt(copy);
-   }
-
-   public static String getClassification(String barcode) {
-      return splitOnColon(barcode)[0];
-   }
-
-   private static int parsePositiveInt(String text) {
-      int number = parseInt(text);
-      if (number < 1)
-         throw new IllegalArgumentException();
-      return number;
-   }
-
-   private static String[] splitOnColon(String barcode) {
-      String[] barcodeParts = barcode.split(":");
-      if (barcodeParts.length != 2)
-         throw new IllegalArgumentException();
-      return barcodeParts;
-   }
-
-   private static int parseInt(String text) {
-      try {
-         return Integer.parseInt(text, 10);
-      } catch (Throwable t) {
-         throw new IllegalArgumentException();
-      }
-   }
-
-   public int daysLate() {
-      return DateUtil.daysAfter(dateDue(), dateLastCheckedIn());
    }
 }

@@ -42,47 +42,6 @@ public class HoldingTest {
    }
 
    @Test
-   public void generatesBarCodeFromClassificationAndCopy() {
-      assertEquals(THE_TRIAL.getClassification() + Holding.BARCODE_SEPARATOR
-            + COPY_NUMBER_1, holding.getBarCode());
-
-      assertEquals("a" + Holding.BARCODE_SEPARATOR + "2",
-            Holding.createBarCode("a", 2));
-   }
-
-   @Test
-   public void extractsClassificationFromBarcode() {
-      assertThat(Holding.getClassification("123:1"), is("123"));
-      assertThat(Holding.getClassification("456:1"), is("456"));
-   }
-
-   @Test
-   public void extractsCopyNumberFromBarcode() {
-      assertThat(Holding.getCopyNumber("123:1"), is(1));
-      assertThat(Holding.getCopyNumber("123:2"), is(2));
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void throwsWhenExtractingClassificationFromInvalidBarcode() {
-      Holding.getClassification("1234");
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void throwsWhenExtractingCopyNumberFromInvalidBarcode() {
-      Holding.getCopyNumber("1234");
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void throwsWhenExtractingCopyNumberFromBarcodeWithNonNumericCopyNumber() {
-      Holding.getCopyNumber("1234:x");
-   }
-
-   @Test(expected = IllegalArgumentException.class)
-   public void throwsWhenExtractingNonPositiveCopyNumberFromBarcode() {
-      Holding.getCopyNumber("1234:0");
-   }
-
-   @Test
    public void changesBranchOnTransfer() {
       holding.transfer(BranchTest.BRANCH_WEST);
       assertEquals(BranchTest.BRANCH_WEST, holding.getBranch());

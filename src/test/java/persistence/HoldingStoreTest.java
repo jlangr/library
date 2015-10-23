@@ -9,10 +9,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import domain.core.*;
 import testutil.CollectionsUtil;
-import domain.core.MaterialTestData;
-import domain.core.Holding;
 
 public class HoldingStoreTest {
    private HoldingStore store;
@@ -28,8 +26,7 @@ public class HoldingStoreTest {
 
    @Test
    public void returnsAddedHoldings() {
-      List<Holding> retrieved = store.findAll(savedHolding.getMaterial()
-            .getClassification());
+      List<Holding> retrieved = store.findAll(savedHolding.getMaterial().getClassification());
 
       assertEquals(savedHolding.getMaterial(),
             CollectionsUtil.soleElement(retrieved).getMaterial());
@@ -39,8 +36,7 @@ public class HoldingStoreTest {
    public void returnsNewInstanceOnRetrieval() {
       store = new HoldingStore();
 
-      List<Holding> retrieved = store.findAll(savedHolding.getMaterial()
-            .getClassification());
+      List<Holding> retrieved = store.findAll(savedHolding.getMaterial().getClassification());
 
       assertNotSame(savedHolding, CollectionsUtil.soleElement(retrieved));
    }
@@ -57,8 +53,7 @@ public class HoldingStoreTest {
 
    @Test
    public void findBarCodeReturnsMatchingHolding() {
-      String barCode = Holding.createBarCode(MaterialTestData.KAFKA_CLASSIFICATION,
-            1);
+      String barCode = HoldingBarcode.createCode(MaterialTestData.KAFKA_CLASSIFICATION, 1);
 
       Holding holding = store.find(barCode);
 

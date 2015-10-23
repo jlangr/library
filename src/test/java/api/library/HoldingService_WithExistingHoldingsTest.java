@@ -50,11 +50,11 @@ public class HoldingService_WithExistingHoldingsTest {
    }
 
    private Holding addHolding(String branchScanCode, MaterialDetails material, int copyNumber) {
-      String holdingId = Holding.createBarCode(material.getClassification(), copyNumber);
+      String barcode = HoldingBarcode.createCode(material.getClassification(), copyNumber);
       service.addTestBookToMaterialService(material);
 
-      service.add(holdingId, branchScanCode);
-      return service.find(holdingId);
+      service.add(barcode, branchScanCode);
+      return service.find(barcode);
    }
 
    @Test
@@ -69,12 +69,12 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void storesNewHoldingAtBranch() {
-      String holdingId = Holding.createBarCode(THE_TRIAL.getClassification(), 3);
+      String barcode = HoldingBarcode.createCode(THE_TRIAL.getClassification(), 3);
       service.addTestBookToMaterialService(THE_TRIAL);
 
-      service.add(holdingId, eastScanCode);
+      service.add(barcode, eastScanCode);
 
-      Holding added = service.find(holdingId);
+      Holding added = service.find(barcode);
       assertEquals(eastScanCode, added.getBranch().getScanCode());
    }
 
@@ -125,13 +125,13 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void updatesPatronWithHoldingOnCheckout() {
-      String barCode = Holding.createBarCode(LANGR_CLASSIFICATION, 1);
+      String barcode = HoldingBarcode.createCode(LANGR_CLASSIFICATION, 1);
 
-      service.checkOut(joeId, barCode, new Date());
+      service.checkOut(joeId, barcode, new Date());
 
       HoldingMap patronHoldings = retrieve(joeId).holdings();
       assertEquals(1, patronHoldings.size());
-      assertTrue(patronHoldings.contains(service.find(barCode)));
+      assertTrue(patronHoldings.contains(service.find(barcode)));
    }
 
    @Test
