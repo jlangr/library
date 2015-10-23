@@ -1,22 +1,12 @@
 package domain.core;
 
-import static domain.core.MaterialTestData.AGILE_JAVA;
-import static domain.core.MaterialTestData.KAFKA_CLASSIFICATION;
-import static domain.core.MaterialTestData.LANGR_CLASSIFICATION;
-import static domain.core.MaterialTestData.THE_TRIAL;
-import static domain.core.BranchTest.BRANCH_EAST;
-import static domain.core.BranchTest.BRANCH_WEST;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import persistence.HoldingStore;
+import static domain.core.BranchTest.*;
+import static domain.core.MaterialTestData.*;
+import static org.junit.Assert.*;
+import java.util.*;
+import org.junit.*;
+import persistence.*;
+import static java.util.Arrays.*;
 
 public class CatalogTest {
    private Catalog catalog;
@@ -46,27 +36,23 @@ public class CatalogTest {
 
    @Test
    public void findAllReturnsListOfHoldings() {
-      Holding holding1 = new Holding(THE_TRIAL, BRANCH_EAST);
-      Holding holding2 = new Holding(THE_TRIAL, BRANCH_EAST);
+      Holding holding1 = new Holding(THE_TRIAL, BRANCH_EAST, 1);
+      Holding holding2 = new Holding(THE_TRIAL, BRANCH_EAST, 2);
       catalog.add(holding1);
       catalog.add(holding2);
 
       List<Holding> holdings = catalog.findAll(KAFKA_CLASSIFICATION);
 
-      assertEquals(2, holdings.size());
-      assertEquals(holding1, holdings.get(0));
-      assertEquals(holding2, holdings.get(1));
+      assertEquals(asList(holding1, holding2), holdings);
    }
 
    @Test
    public void findAllReturnsOnlyHoldingsWithMatchingClassification() {
-      catalog.add(new Holding(THE_TRIAL, BRANCH_EAST));
-      catalog.add(new Holding(AGILE_JAVA, BRANCH_EAST));
+      catalog.add(new Holding(THE_TRIAL, BRANCH_EAST, 1));
+      catalog.add(new Holding(AGILE_JAVA, BRANCH_EAST, 1));
 
-      List<Holding> retrievedForClassification1 = catalog
-            .findAll(KAFKA_CLASSIFICATION);
-      List<Holding> retrievedForClassification2 = catalog
-            .findAll(LANGR_CLASSIFICATION);
+      List<Holding> retrievedForClassification1 = catalog.findAll(KAFKA_CLASSIFICATION);
+      List<Holding> retrievedForClassification2 = catalog.findAll(LANGR_CLASSIFICATION);
 
       HoldingTest.assertContains(retrievedForClassification1, THE_TRIAL);
       HoldingTest.assertContains(retrievedForClassification2, AGILE_JAVA);
@@ -74,7 +60,7 @@ public class CatalogTest {
 
    @Test
    public void findBarCode() {
-      Holding holding = new Holding(THE_TRIAL, BRANCH_EAST);
+      Holding holding = new Holding(THE_TRIAL, BRANCH_EAST, 1);
       catalog.add(holding);
 
       Holding retrieved = catalog.find(holding.getBarCode());
@@ -89,13 +75,10 @@ public class CatalogTest {
       catalog.add(holding1);
       catalog.add(holding2);
 
-      Set<Holding> results = new HashSet<Holding>();
-
+      List<Holding> results = new ArrayList<Holding>();
       for (Holding holding: catalog)
          results.add(holding);
 
-      assertEquals(2, results.size());
-      assertTrue(results.contains(holding1));
-      assertTrue(results.contains(holding2));
+      assertEquals(asList(holding1, holding2), results);
    }
 }

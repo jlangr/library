@@ -1,6 +1,5 @@
 package domain.core;
 
-import java.util.Calendar;
 import java.util.Date;
 import com.loc.material.api.*;
 import util.*;
@@ -57,18 +56,7 @@ public class Holding {
    }
 
    public Date dateDue() {
-      return addDays(dateCheckedOut, getHoldingPeriod());
-   }
-
-   private Date addDays(Date date, int days) {
-      Calendar calendar = Calendar.getInstance();
-      final long msInDay = 1000L * 60 * 60 * 24;
-      calendar.setTime(new Date(date.getTime() + msInDay * days));
-      calendar.set(Calendar.HOUR, 0);
-      calendar.set(Calendar.MINUTE, 0);
-      calendar.set(Calendar.SECOND, 0);
-      calendar.set(Calendar.MILLISECOND, 0);
-      return calendar.getTime();
+      return DateUtil.addDays(dateCheckedOut, getHoldingPeriod());
    }
 
    private int getHoldingPeriod() {
@@ -76,7 +64,7 @@ public class Holding {
    }
 
    public int checkIn(Date date, Branch branch) {
-      dateLastCheckedIn = date;
+      this.dateLastCheckedIn = date;
       this.branch = branch;
       int daysLate = DateUtil.daysFrom(dateDue(), dateLastCheckedIn);
       return daysLate < 0 ? 0 : daysLate;
