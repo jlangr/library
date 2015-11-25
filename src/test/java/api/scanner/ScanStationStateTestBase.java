@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class ScanStationStateTest extends MockedScannerSubsystemFields {
+public abstract class ScanStationStateTestBase extends MockedScannerSubsystemFields {
 
    @Before
    public void injectStateObject() {

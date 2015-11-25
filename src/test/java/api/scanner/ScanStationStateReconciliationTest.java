@@ -5,7 +5,7 @@ import java.util.*;
 import org.junit.*;
 import testutil.*;
 
-public class ScanStationStateReconciliationTest extends ScanStationStateTest {
+public class ScanStationStateReconciliationTest extends ScanStationStateTestBase {
 
    @Override
    protected ScanStationState createStateObject() {

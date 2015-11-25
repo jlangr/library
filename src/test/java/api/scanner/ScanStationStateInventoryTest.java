@@ -16,7 +16,7 @@ import org.junit.*;
 
 import domain.core.Branch;
 
-public class ScanStationStateInventoryTest extends ScanStationStateTest {
+public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
    @Override
    protected ScanStationStateInventory createStateObject() {
       return new ScanStationStateInventory(scanner);

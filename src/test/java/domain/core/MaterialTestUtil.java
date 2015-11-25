@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.loc.material.api.*;
 
-public class MaterialTest {
+public class MaterialTestUtil {
    public static void assertMaterialsEqual(MaterialDetails expected, MaterialDetails actual) {
       assertEquals(expected.getAuthor(), actual.getAuthor());
       assertEquals(expected.getClassification(), actual.getClassification());

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-public class ScanStationStateWaitingTest extends ScanStationStateTest {
+public class ScanStationStateWaitingTest extends ScanStationStateTestBase {
    @Override
    protected ScanStationState createStateObject() {
       return new ScanStationStateWaiting(scanner);

@@ -121,7 +121,7 @@ public class HoldingTest {
    }
 
    static void assertMaterial(MaterialDetails expected, Holding holding) {
-      MaterialTest.assertMaterialsEqual(expected, holding.getMaterial());
+      MaterialTestUtil.assertMaterialsEqual(expected, holding.getMaterial());
    }
 
    public static Date addDays(Date date, int days) {

@@ -19,7 +19,7 @@ import org.junit.Test;
 import util.DateUtil;
 import util.TimestampSource;
 
-public class ScanStationStateReturnsTest extends ScanStationStateTest {
+public class ScanStationStateReturnsTest extends ScanStationStateTestBase {
    @Override
    protected ScanStationState createStateObject() {
       return new ScanStationStateReturns(scanner);

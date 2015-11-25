@@ -21,7 +21,7 @@ import util.DateUtilTest;
 import util.TimestampSource;
 import domain.core.Holding;
 
-public class ScanStationStateCheckoutTest extends ScanStationStateTest {
+public class ScanStationStateCheckoutTest extends ScanStationStateTestBase {
    private Holding holdingWithAvailability;
    private Holding holdingWithUnavailability;
 
