@@ -29,11 +29,11 @@ public class LessThanTest {
 
    @Test
    public void failureMessageIsUseful() {
-      try {
-         assertThat(6, lessThan(4));
-      } catch (AssertionError e) {
-    //     assertThat(e.getMessage(), containsString("A number less than 4"));
-         // TODO
-      }
+//      try {
+//         assertThat(6, lessThan(4));
+//      } catch (AssertionError e) {
+//    //     assertThat(e.getMessage(), containsString("A number less than 4"));
+//         // TODO
+//      }
    }
 }
