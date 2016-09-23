@@ -22,45 +22,40 @@ public class HoldingTest {
    }
 
    @Test
-   public void create() {
-      assertMaterial(THE_TRIAL, holding);
-      assertEquals(BranchTest.BRANCH_EAST, holding.getBranch());
-      assertEquals(1, holding.getCopyNumber());
-   }
-
-   @Test
-   public void createWithBranchAndCopyDefaults() {
+   public void branchDefaultsToCheckedOutWhenCreated() {
       Holding holding = new Holding(THE_TRIAL);
-      assertEquals(Branch.CHECKED_OUT, holding.getBranch());
-      assertEquals(1, holding.getCopyNumber());
+
+      assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
    }
 
    @Test
-   public void createWithCopyDefaults() {
+   public void copyNumberDefaultsTo1WhenCreated() {
       Holding holding = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST);
-      assertEquals(1, holding.getCopyNumber());
+
+      assertThat(holding.getCopyNumber(), equalTo(1));
    }
 
    @Test
    public void changesBranchOnTransfer() {
       holding.transfer(BranchTest.BRANCH_WEST);
-      assertEquals(BranchTest.BRANCH_WEST, holding.getBranch());
+
+      assertThat(holding.getBranch(), equalTo(BranchTest.BRANCH_WEST));
    }
 
    @Test
    public void ck() {
       holding.checkOut(TODAY);
-      assertEquals(TODAY, holding.dateCheckedOut());
+      assertThat(holding.dateCheckedOut(), equalTo(TODAY));
       assertTrue(holding.dateDue().after(TODAY));
-      assertEquals(Branch.CHECKED_OUT, holding.getBranch());
+      assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
       assertFalse(holding.isAvailable());
 
       holding.checkOut(TODAY);
       Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
       holding.checkIn(tomorrow, EAST_BRANCH);
-      assertEquals(tomorrow, holding.dateLastCheckedIn());
+      assertThat(holding.dateLastCheckedIn(), equalTo(tomorrow));
       assertTrue(holding.isAvailable());
-      assertEquals(EAST_BRANCH, holding.getBranch());
+      assertThat(holding.getBranch(), equalTo(EAST_BRANCH));
    }
 
    @Test
@@ -89,7 +84,7 @@ public class HoldingTest {
 
       int daysLate = holding.checkIn(TODAY, BranchTest.BRANCH_EAST);
 
-      assertThat(daysLate, is(0));
+      assertThat(daysLate, equalTo(0));
    }
 
    @Test
@@ -98,7 +93,7 @@ public class HoldingTest {
 
       int daysLate = holding.checkIn(holding.dateDue(), BranchTest.BRANCH_EAST);
 
-      assertThat(daysLate, is(0));
+      assertThat(daysLate, equalTo(0));
    }
 
    @Test
@@ -108,16 +103,12 @@ public class HoldingTest {
 
       int daysLate = holding.checkIn(threeDaysLate, BranchTest.BRANCH_EAST);
 
-      assertThat(daysLate, is(3));
+      assertThat(daysLate, equalTo(3));
    }
 
    private void checkOutToday(MaterialDetails material, Branch branch) {
       holding = new Holding(material, branch);
       holding.checkOut(TODAY);
-   }
-
-   static void assertContains(List<Holding> holdings, MaterialDetails expectedMaterial) {
-      assertMaterial(expectedMaterial, holdings.get(0));
    }
 
    static void assertMaterial(MaterialDetails expected, Holding holding) {
@@ -134,8 +125,8 @@ public class HoldingTest {
       int expectedYear = calendar.get(Calendar.YEAR);
       int expectedDayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
       calendar.setTime(actualDate);
-      assertEquals(expectedYear, calendar.get(Calendar.YEAR));
-      assertEquals(expectedDayOfYear, calendar.get(Calendar.DAY_OF_YEAR));
+      assertThat(calendar.get(Calendar.YEAR), equalTo(expectedYear));
+      assertThat(calendar.get(Calendar.DAY_OF_YEAR), equalTo(expectedDayOfYear));
    }
 
    @Test

@@ -16,12 +16,13 @@ public class Catalog implements Iterable<Holding> {
       return access.findAll(classification);
    }
 
-   public void add(Holding holding) {
+   public String add(Holding holding) {
       List<Holding> existing = access.findAll(holding.getMaterial()
             .getClassification());
       if (!existing.isEmpty())
          holding.setCopyNumber(existing.size() + 1);
       access.save(holding);
+      return holding.getBarCode();
    }
 
    @Override

@@ -1,84 +1,99 @@
 package domain.core;
 
-import static domain.core.BranchTest.*;
-import static domain.core.MaterialTestData.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.*;
 import org.junit.*;
-import persistence.*;
-import static java.util.Arrays.*;
+import com.loc.material.api.MaterialDetails;
+import persistence.HoldingStore;
 
 public class CatalogTest {
-   private Catalog catalog;
+   private Catalog catalog = new Catalog();
+   private HoldingBuilder holdingBuilder = new HoldingBuilder();
 
    @Before
    public void initialize() {
-      catalog = new Catalog();
       HoldingStore.deleteAll();
    }
 
    @Test
    public void isEmptyOnCreation() {
-      assertEquals(0, catalog.size());
+      assertThat(catalog.size(), equalTo(0));
    }
 
    @Test
    public void incrementsSizeWhenMaterialAdded() {
-      catalog.add(new Holding(MaterialTestData.THE_TRIAL, BRANCH_EAST));
+      catalog.add(holdingBuilder.create());
 
-      assertEquals(1, catalog.size());
+      assertThat(catalog.size(), equalTo(1));
    }
 
    @Test
    public void answersEmptyForNonexistentMaterial() {
-      assertTrue(catalog.findAll(KAFKA_CLASSIFICATION).isEmpty());
+      assertTrue(catalog.findAll("nonexistentid").isEmpty());
    }
 
    @Test
    public void findAllReturnsListOfHoldings() {
-      Holding holding1 = new Holding(THE_TRIAL, BRANCH_EAST, 1);
-      Holding holding2 = new Holding(THE_TRIAL, BRANCH_EAST, 2);
-      catalog.add(holding1);
-      catalog.add(holding2);
+      String classification = "123";
+      String barcode = addHoldingWithClassification(classification);
+      String barcode2 = addHoldingWithClassification(classification);
 
-      List<Holding> holdings = catalog.findAll(KAFKA_CLASSIFICATION);
+      List<Holding> holdings = catalog.findAll(classification);
 
-      assertEquals(asList(holding1, holding2), holdings);
+      Holding retrieved1 = catalog.find(barcode);
+      Holding retrieved2 = catalog.find(barcode2);
+      assertThat(holdings, equalTo(asList(retrieved1, retrieved2)));
+   }
+
+   private String addHoldingWithClassification(String classification) {
+      MaterialDetails material = new MaterialDetails("", "", "", classification, "");
+      Holding holding = holdingBuilder.with(material).create();
+      return catalog.add(holding);
    }
 
    @Test
    public void findAllReturnsOnlyHoldingsWithMatchingClassification() {
-      catalog.add(new Holding(THE_TRIAL, BRANCH_EAST, 1));
-      catalog.add(new Holding(AGILE_JAVA, BRANCH_EAST, 1));
+      String barcode1 = addHoldingWithClassification("123");
+      addHoldingWithClassification("456");
 
-      List<Holding> retrievedForClassification1 = catalog.findAll(KAFKA_CLASSIFICATION);
-      List<Holding> retrievedForClassification2 = catalog.findAll(LANGR_CLASSIFICATION);
+      List<Holding> retrieved = catalog.findAll("123");
 
-      HoldingTest.assertContains(retrievedForClassification1, THE_TRIAL);
-      HoldingTest.assertContains(retrievedForClassification2, AGILE_JAVA);
+      assertThat(retrieved.size(), equalTo(1));
+      assertThat(retrieved.get(0).getBarCode(), equalTo(barcode1));
    }
 
    @Test
-   public void findBarCode() {
-      Holding holding = new Holding(THE_TRIAL, BRANCH_EAST, 1);
+   public void retrievesHoldingUsingBarcode() {
+      Holding holding = holdingBuilder.create();
+      String barcode = catalog.add(holding);
+
+      Holding retrieved = catalog.find(barcode);
+
+      assertThat(retrieved, equalTo(holding));
+   }
+
+   @Test
+   public void incrementsCopyNumberWhenSameClassificationExists() {
+      Holding holding = holdingBuilder.create();
       catalog.add(holding);
+      String barcode = catalog.add(holding);
 
-      Holding retrieved = catalog.find(holding.getBarCode());
+      Holding retrieved = catalog.find(barcode);
 
-      assertEquals(holding, retrieved);
+      assertThat(retrieved.getCopyNumber(), equalTo(2));
    }
 
    @Test
    public void supportsIteration() {
-      Holding holding1 = new Holding(THE_TRIAL, BRANCH_EAST, 1);
-      Holding holding2 = new Holding(THE_TRIAL, BRANCH_WEST, 2);
-      catalog.add(holding1);
-      catalog.add(holding2);
+      String barcode1 = addHoldingWithClassification("1");
+      String barcode2 = addHoldingWithClassification("2");
 
-      List<Holding> results = new ArrayList<Holding>();
+      List<String> results = new ArrayList<>();
       for (Holding holding: catalog)
-         results.add(holding);
+         results.add(holding.getBarCode());
 
-      assertEquals(asList(holding1, holding2), results);
+      assertThat(results, equalTo(asList(barcode1, barcode2)));
    }
 }

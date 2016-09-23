@@ -1,6 +1,6 @@
 package api.library;
 
-public class InvalidClassificationException extends RuntimeException {
+public class InvalidSourceIdException extends RuntimeException {
    private static final long serialVersionUID = 1L;
 
 }

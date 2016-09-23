@@ -9,14 +9,17 @@ public class HoldingService {
    private Catalog catalog = new Catalog();
 
    public String add(String sourceId, String branchId) {
+      Holding holding = new Holding(retrieveMaterialDetails(sourceId), findBranch(branchId));
+      catalog.add(holding);
+      return holding.getBarCode();
+   }
+
+   private MaterialDetails retrieveMaterialDetails(String sourceId) {
       MaterialDetails material =
             ClassificationApiFactory.getService().getMaterialDetails(sourceId);
       if (material == null)
-         throw new InvalidClassificationException();
-
-      Holding holding = new Holding(material, findBranch(branchId));
-      catalog.add(holding);
-      return holding.getBarCode();
+         throw new InvalidSourceIdException();
+      return material;
    }
 
    private Branch findBranch(String branchId) {
@@ -50,17 +53,15 @@ public class HoldingService {
 
    public Date dateDue(String barCode) {
       Holding holding = find(barCode);
-      if (holding == null) {
+      if (holding == null)
          throw new HoldingNotFoundException();
-      }
       return holding.dateDue();
    }
 
    public void checkOut(String patronId, String barCode, Date date) {
       Holding holding = find(barCode);
-      if (holding == null) {
+      if (holding == null)
          throw new HoldingNotFoundException();
-      }
       if (!holding.isAvailable())
          throw new HoldingAlreadyCheckedOutException();
       holding.checkOut(date);
