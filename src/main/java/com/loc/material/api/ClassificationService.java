@@ -9,11 +9,6 @@ public class ClassificationService implements ClassificationApi {
    }
 
    @Override
-   public boolean isValid(String classification) {
-      throw new RuntimeException("unable to connect");
-   }
-
-   @Override
    public Collection<MaterialDetails> allMaterials() {
       throw new RuntimeException("unable to connect");
    }

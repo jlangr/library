@@ -15,8 +15,8 @@ public class LibraryDataTest {
       new BranchService().add("");
 
       MockHoldingService holdingService = new MockHoldingService();
-      holdingService.addTestBookToMaterialService(new MaterialDetails("", "", "123", MaterialType.Book, ""));
-      holdingService.add("123:1", Branch.CHECKED_OUT.getScanCode());
+      holdingService.addTestBookToMaterialService(new MaterialDetails("123", "", "", "QA123", MaterialType.Book, ""));
+      holdingService.add("123", Branch.CHECKED_OUT.getScanCode());
 
       LibraryData.deleteAll();
 

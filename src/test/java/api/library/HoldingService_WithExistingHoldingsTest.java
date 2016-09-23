@@ -1,81 +1,69 @@
 package api.library;
 
-import static domain.core.MaterialTestData.*;
 import static domain.core.BranchTest.*;
+import static domain.core.MaterialTestData.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import java.util.*;
+import static org.mockito.Mockito.*;
+import java.util.Date;
 import org.junit.*;
 import com.loc.material.api.*;
-import persistence.*;
-import util.*;
 import domain.core.*;
+import persistence.PatronStore;
+import util.DateUtil;
 
 public class HoldingService_WithExistingHoldingsTest {
-   private MockHoldingService service;
-   private Holding theTrialCopy1AtEast;
-   private Holding theTrialCopy2AtWest;
-   private Holding agileJavaAtWest;
-   private String eastScanCode;
-   private String westScanCode;
+   private HoldingService service;
    private String joeId;
+   private ClassificationApi classificationApi;
+   private String branchScanCode;
 
    @Before
    public void initialize() {
       LibraryData.deleteAll();
-      service = new MockHoldingService();
+      classificationApi = mock(ClassificationApi.class);
+      ClassificationApiFactory.setService(classificationApi);
+      service = new HoldingService();
 
-      addTwoBranches();
-      addThreeNewHoldings();
-      addPatron();
+      branchScanCode = add("a branch name");
    }
 
-   private void addPatron() {
+   private void addPatronJoe() {
       joeId = new PatronService().add("joe");
-   }
-
-   private void addTwoBranches() {
-      eastScanCode = add(BRANCH_EAST.getName());
-      westScanCode = add(BRANCH_WEST.getName());
    }
 
    private String add(String name) {
       return new BranchService().add(name);
    }
 
-   private void addThreeNewHoldings() {
-      theTrialCopy1AtEast = addHolding(eastScanCode, THE_TRIAL, 1);
-      theTrialCopy2AtWest = addHolding(westScanCode, THE_TRIAL, 2);
-      agileJavaAtWest = addHolding(westScanCode, AGILE_JAVA, 1);
+   private Holding addHolding(String branchScanCode, MaterialDetails material) {
+      when(classificationApi.getMaterialDetails(material.getSourceId())).thenReturn(material);
+      String barcode = service.add(material.getSourceId(), branchScanCode);
+      return service.find(barcode);
    }
 
-   private Holding addHolding(String branchScanCode, MaterialDetails material, int copyNumber) {
-      String barcode = HoldingBarcode.createCode(material.getClassification(), copyNumber);
-      service.addTestBookToMaterialService(material);
-
-      service.add(barcode, branchScanCode);
-      return service.find(barcode);
+   private String addHolding(MaterialDetails material) {
+      return addHolding(branchScanCode, material).getBarCode();
    }
 
    @Test
    public void returnsEntireInventoryOfHoldings() {
+      // TODO
+      addHolding(THE_TRIAL);
+      addHolding(THE_TRIAL);
+      addHolding(THE_TRIAL);
       HoldingMap holdings = service.allHoldings();
 
       assertEquals(3, holdings.size());
-      assertTrue(holdings.contains(theTrialCopy1AtEast));
-      assertTrue(holdings.contains(theTrialCopy2AtWest));
-      assertTrue(holdings.contains(agileJavaAtWest));
+//      assertThat(holdings,
+//         hasItems(theTrialCopy1AtEast, theTrialCopy2AtWest, agileJavaAtWest));
    }
 
    @Test
    public void storesNewHoldingAtBranch() {
-      String barcode = HoldingBarcode.createCode(THE_TRIAL.getClassification(), 3);
-      service.addTestBookToMaterialService(THE_TRIAL);
+      String barcode = addHolding(AGILE_JAVA);
 
-      service.add(barcode, eastScanCode);
-
-      Holding added = service.find(barcode);
-      assertEquals(eastScanCode, added.getBranch().getScanCode());
+      assertEquals(branchScanCode, service.find(barcode).getBranch().getScanCode());
    }
 
    @Test
@@ -85,21 +73,30 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void updatesBranchOnHoldingTransfer() {
-      service.transfer(agileJavaAtWest, BRANCH_EAST);
+      String barcode = addHolding(AGILE_JAVA);
+      Holding holding = service.find(barcode);
 
-      assertEquals(BRANCH_EAST, agileJavaAtWest.getBranch());
+      // TODO change to take a barcode
+      service.transfer(holding, BRANCH_EAST);
+
+      holding = service.find(barcode);
+      assertEquals(BRANCH_EAST, holding.getBranch());
    }
 
    @Test
    public void holdingIsAvailableWhenNotCheckedOut() {
-      assertThat(service.isAvailable(agileJavaAtWest.getBarCode()), is(true));
+      String barcode = addHolding(AGILE_JAVA);
+
+      assertThat(service.isAvailable(barcode), is(true));
    }
 
    @Test
    public void holdingMadeUnavailableOnCheckout() {
-      service.checkOut(joeId, agileJavaAtWest.getBarCode(), new Date());
+      addPatronJoe();
+      String barcode = addHolding(THE_TRIAL);
+      service.checkOut(joeId, barcode, new Date());
 
-      assertThat(service.isAvailable(agileJavaAtWest.getBarCode()), is(false));
+      assertThat(service.isAvailable(barcode), is(false));
    }
 
    @Test(expected = HoldingNotFoundException.class)
@@ -114,18 +111,22 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test(expected = HoldingNotFoundException.class)
    public void checkinThrowsWhenHoldingIdNotFound() {
-      service.checkIn("999:1", new Date(), eastScanCode);
+      service.checkIn("999:1", new Date(), branchScanCode);
    }
 
    @Test(expected = HoldingAlreadyCheckedOutException.class)
    public void checkoutThrowsWhenUnavailable() {
-      service.checkOut(joeId, agileJavaAtWest.getBarCode(), new Date());
-      service.checkOut(joeId, agileJavaAtWest.getBarCode(), new Date());
+      addPatronJoe();
+      String barcode = addHolding(THE_TRIAL);
+      service.checkOut(joeId, barcode, new Date());
+
+      service.checkOut(joeId, barcode, new Date());
    }
 
    @Test
    public void updatesPatronWithHoldingOnCheckout() {
-      String barcode = HoldingBarcode.createCode(LANGR_CLASSIFICATION, 1);
+      addPatronJoe();
+      String barcode = addHolding(THE_TRIAL);
 
       service.checkOut(joeId, barcode, new Date());
 
@@ -136,27 +137,33 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void returnsHoldingToBranchOnCheckIn() {
-      String barCode = agileJavaAtWest.getBarCode();
+      addPatronJoe();
+      String barCode = addHolding(AGILE_JAVA);
       service.checkOut(joeId, barCode, new Date());
-      service.checkIn(barCode, DateUtil.tomorrow(), eastScanCode);
+      service.checkIn(barCode, DateUtil.tomorrow(), branchScanCode);
 
-      assertTrue(agileJavaAtWest.isAvailable());
-      assertEquals(eastScanCode, agileJavaAtWest.getBranch().getScanCode());
+      Holding holding = service.find(barCode);
+      assertTrue(holding.isAvailable());
+      assertEquals(branchScanCode, holding.getBranch().getScanCode());
    }
 
    @Test
    public void removesHoldingFromPatronOnCheckIn() {
-      String barCode = agileJavaAtWest.getBarCode();
+      addPatronJoe();
+      String barCode = addHolding(THE_TRIAL);
       service.checkOut(joeId, barCode, new Date());
 
-      service.checkIn(barCode, DateUtil.tomorrow(), westScanCode);
+      service.checkIn(barCode, DateUtil.tomorrow(), branchScanCode);
 
       assertTrue(retrieve(joeId).holdings().isEmpty());
    }
 
+   // TODO stub to avoid persistence (even despite being in memory)
+
    @Test
    public void answersDueDate() {
-      String barCode = agileJavaAtWest.getBarCode();
+      addPatronJoe();
+      String barCode = addHolding(THE_TRIAL);
       service.checkOut(joeId, barCode, new Date());
 
       Date due = service.dateDue(barCode);
@@ -167,7 +174,8 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void checkinReturnsDaysLate() {
-      String barCode = agileJavaAtWest.getBarCode();
+      addPatronJoe();
+      String barCode = addHolding(THE_TRIAL);
       service.checkOut(joeId, barCode, new Date());
       Date fiveDaysLate = DateUtil.addDays(service.dateDue(barCode), 5);
 
@@ -178,12 +186,13 @@ public class HoldingService_WithExistingHoldingsTest {
 
    @Test
    public void updatesFinesOnLateCheckIn() {
-      String barCode = agileJavaAtWest.getBarCode();
+      addPatronJoe();
+      String barCode = addHolding(THE_TRIAL);
       service.checkOut(joeId, barCode, new Date());
 
       Holding holding = service.find(barCode);
       Date oneDayLate = DateUtil.addDays(holding.dateDue(), 1);
-      service.checkIn(barCode, oneDayLate, eastScanCode);
+      service.checkIn(barCode, oneDayLate, branchScanCode);
 
       assertEquals(MaterialType.Book.getDailyFine(), retrieve(joeId).fineBalance());
    }

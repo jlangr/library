@@ -1,14 +1,20 @@
 package com.loc.material.api;
 
 public class MaterialDetails {
+   private String sourceId;
    private String title;
    private String author;
    private String year;
    private MaterialType format;
    private String classification;
 
-   public MaterialDetails(String author, String title, String classification,
-         MaterialType format, String year) {
+   public MaterialDetails(String sourceId,
+         String author,
+         String title,
+         String classification,
+         MaterialType format,
+         String year) {
+      this.sourceId = sourceId;
       this.author = author;
       this.title = title;
       this.classification = classification;
@@ -16,9 +22,17 @@ public class MaterialDetails {
       this.year = year;
    }
 
-   public MaterialDetails(String author, String title, String classification,
+   public MaterialDetails(String sourceId, String author, String title, String classification,
          String year) {
-      this(author, title, classification, MaterialType.Book, year);
+      this(sourceId, author, title, classification, MaterialType.Book, year);
+   }
+
+   public String getSourceId() {
+      return sourceId;
+   }
+
+   public void setSourceId(String sourceId) {
+      this.sourceId = sourceId;
    }
 
    public String getClassification() {
@@ -43,6 +57,6 @@ public class MaterialDetails {
 
    @Override
    public String toString() {
-      return author + " " + title + " " + year + " " + classification;
+      return sourceId + ": " + author + " " + title + " " + year + " " + classification;
    }
 }

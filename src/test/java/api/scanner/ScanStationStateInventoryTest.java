@@ -61,17 +61,16 @@ public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
       assertCurrentState(ScanStationStateReconciliation.class);
    }
 
-   
    @Test
-   public void addsNewHoldingToLibraryWhenHoldingBarcodeScanned() {
-      String tessBarcode = "123:1";
+   public void addsNewHoldingToLibraryWhenSourceIdScanned() {
+      String sourceId = "1234567890123";
       scanner.setBranch(BRANCH_WEST);
 
-      state.scanHolding(tessBarcode);
+      state.scanHolding(sourceId);
 
-      verify(holdingService).add(tessBarcode, BRANCH_WEST_ID);
+      verify(holdingService).add(sourceId, BRANCH_WEST_ID);
       assertStateUnchanged();
-      assertMessageDisplayed(String.format(MSG_SCANNED_HOLDING, tessBarcode));
+      assertMessageDisplayed(String.format(MSG_SCANNED_HOLDING, sourceId));
    }
 
    @Test

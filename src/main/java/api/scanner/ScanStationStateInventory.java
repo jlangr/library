@@ -21,6 +21,7 @@ public class ScanStationStateInventory extends AbstractScanStationState
    @Override
    public void scanHolding(String barcode) {
       String holdingId = barcode;
+      // TODO
       scanStation.getLibrarySystem().add(holdingId, scanStation.getBranchId());
       scanStation.showMessage(String.format(MSG_SCANNED_HOLDING, holdingId));
    }

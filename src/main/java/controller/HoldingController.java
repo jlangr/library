@@ -10,7 +10,9 @@ public class HoldingController {
 
    @RequestMapping(value = "/holdings", method = { POST })
    public void addHolding(@RequestBody AddHoldingRequest request) {
-      service.add(request.getHoldingBarcode(), request.getBranchId());
+      // TODO need material type also
+      // Does API format change?
+      service.add(request.getSourceId(), request.getBranchId());
    }
 
    @RequestMapping(value = "/holdings/{holdingBarcode}", method = { GET })

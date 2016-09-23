@@ -8,24 +8,15 @@ import domain.core.*;
 public class HoldingService {
    private Catalog catalog = new Catalog();
 
-   public void add(String holdingBarcode, String branchId) {
-      throwIfHoldingAlreadyExists(holdingBarcode);
-      catalog.add(create(holdingBarcode, branchId));
-   }
-
-   private Holding create(String holdingBarcode, String branchId) {
-      String classification = HoldingBarcode.getClassification(holdingBarcode);
+   public String add(String sourceId, String branchId) {
       MaterialDetails material =
-            ClassificationApiFactory.getService().getMaterialDetails(classification);
+            ClassificationApiFactory.getService().getMaterialDetails(sourceId);
       if (material == null)
          throw new InvalidClassificationException();
-      return new Holding(material, findBranch(branchId),
-            HoldingBarcode.getCopyNumber(holdingBarcode));
-   }
 
-   private void throwIfHoldingAlreadyExists(String holdingBarcode) {
-      if (find(holdingBarcode) != null)
-         throw new DuplicateHoldingException();
+      Holding holding = new Holding(material, findBranch(branchId));
+      catalog.add(holding);
+      return holding.getBarCode();
    }
 
    private Branch findBranch(String branchId) {

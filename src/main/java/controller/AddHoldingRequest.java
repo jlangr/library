@@ -4,7 +4,7 @@ public class AddHoldingRequest {
    private String holdingBarcode;
    private String branchId;
 
-   public String getHoldingBarcode() {
+   public String getSourceId() {
       return holdingBarcode;
    }
    public String getBranchId() {

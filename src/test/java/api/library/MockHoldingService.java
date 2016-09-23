@@ -22,18 +22,13 @@ public class MockHoldingService extends HoldingService {
    class FakeClassificationApi implements ClassificationApi {
       private Map<String, MaterialDetails> materials = new HashMap<String, MaterialDetails>();
 
-      @Override
-      public boolean isValid(String classification) {
-         return materials.containsKey(classification);
-      }
-
       public void add(MaterialDetails material) {
-         materials.put(material.getClassification(), material);
+         materials.put(material.getSourceId(), material);
       }
 
       @Override
-      public MaterialDetails getMaterialDetails(String classification) {
-         return materials.get(classification);
+      public MaterialDetails getMaterialDetails(String sourceId) {
+         return materials.get(sourceId);
       }
 
       @Override
