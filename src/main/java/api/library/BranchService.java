@@ -1,14 +1,13 @@
 package api.library;
 
-import java.util.Collection;
-
-import persistence.BranchStore;
+import java.util.List;
 import domain.core.Branch;
+import persistence.BranchStore;
 
 public class BranchService {
    private BranchStore store = new BranchStore();
 
-   public Collection<Branch> allBranches() {
+   public List<Branch> allBranches() {
       return store.getAll();
    }
 
@@ -27,7 +26,7 @@ public class BranchService {
 
    private String save(Branch branch) {
       if (store.findByScanCode(branch.getScanCode()) != null)
-         throw new DuplicateBranchCodeException(); 
+         throw new DuplicateBranchCodeException();
       store.save(branch);
       return branch.getScanCode();
    }

@@ -1,17 +1,13 @@
 package api.library;
 
-import static domain.core.BranchTest.BRANCH_EAST;
-import static domain.core.BranchTest.BRANCH_WEST;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import java.util.*;
-
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
+import util.ListUtil;
+import java.util.List;
 import org.junit.*;
-
-import testutil.CollectionsUtil;
 import domain.core.Branch;
-import domain.core.BranchTest;
+import testutil.CollectionsUtil;
 
 public class BranchServiceTest {
    private BranchService service;
@@ -21,60 +17,63 @@ public class BranchServiceTest {
       service = new BranchService();
       LibraryData.deleteAll();
    }
-   
+
    @Test
-   public void supportsSpecifyingScanCode() {
+   public void findsByScanCode() {
       service.add("name", "b2");
-      
+
       Branch branch = service.find("b2");
-      
-      assertThat(branch.getName(), is("name"));
+
+      assertThat(branch.getName(), equalTo("name"));
    }
-   
+
    @Test(expected=DuplicateBranchCodeException.class)
    public void rejectsDuplicateScanCode() {
       service.add("", "b559");
       service.add("", "b559");
    }
-   
+
    @Test(expected=InvalidBranchCodeException.class)
    public void rejectsScanCodeNotStartingWithB() {
       service.add("", "c2234");
    }
-   
+
    @Test
    public void answersGeneratedId() {
-      String scanCode = service.add(BranchTest.BRANCH_EAST.getName());
+      String scanCode = service.add("");
+
       assertTrue(scanCode.startsWith("b"));
    }
 
    @Test
    public void capturesBranchFields() {
-      service.add(BranchTest.BRANCH_EAST.getName());
-      Branch branch = CollectionsUtil.soleElement(new BranchService()
-            .allBranches());
+      service.add("a branch");
 
-      assertThat(branch.getName(), is(BRANCH_EAST.getName()));
+      Branch branch = CollectionsUtil.soleElement(new BranchService().allBranches());
+
+      String name = branch.getName();
+      assertThat(name, equalTo("a branch"));
    }
 
    @Test
    public void findsBranchMatchingScanCode() {
-      String scanCode = service.add(BranchTest.BRANCH_EAST.getName());
+      String scanCode = service.add("a branch");
+
       Branch branch = service.find(scanCode);
 
-      assertThat(branch.getName(), is(BRANCH_EAST.getName()));
-      assertThat(branch.getScanCode(), is(scanCode));
+      assertThat(branch.getName(), equalTo("a branch"));
+      assertThat(branch.getScanCode(), equalTo(scanCode));
    }
 
    @Test
    public void returnsListOfAllPersistedBranches() {
-      String eastScanCode = service.add(BRANCH_EAST.getName());
-      String westScanCode = service.add(BRANCH_WEST.getName());
+      String eastScanCode = service.add("e");
+      String westScanCode = service.add("w");
 
-      Collection<Branch> all = new BranchService().allBranches();
-      
-      Branch east = service.find(eastScanCode);
-      Branch west = service.find(westScanCode);
-      assertTrue(CollectionsUtil.containsExactly(all, east, west));
+      List<Branch> all = service.allBranches();
+
+      List<String> scanCodes = new ListUtil().map(all, "getScanCode", Branch.class, String.class);
+      // TODO create custom hamcrest matcher
+      assertThat(scanCodes, equalTo(asList(eastScanCode, westScanCode)));
    }
 }

@@ -25,6 +25,8 @@ public class CollectionsUtil {
       Assert.assertEquals(expected, first);
    }
 
+   // TODO use custom matcher
+
    @SafeVarargs
    public static <T> boolean containsExactly(Collection<T> collection, T... objects) {
       if (collection.size() != objects.length)

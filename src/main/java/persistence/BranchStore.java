@@ -1,9 +1,6 @@
 package persistence;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 import domain.core.Branch;
 
 public class BranchStore {
@@ -37,8 +34,8 @@ public class BranchStore {
       return newBranch;
    }
 
-   public Collection<Branch> getAll() {
-      return branches.values();
+   public List<Branch> getAll() {
+      return new ArrayList<>(branches.values());
    }
 
    public static void deleteAll() {
