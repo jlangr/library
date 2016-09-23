@@ -1,27 +1,35 @@
 package api.library;
 
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 import com.loc.material.api.*;
 import domain.core.*;
+import static org.mockito.Mockito.*;
+import org.junit.*;
 
 public class LibraryDataTest {
+   private PatronService patronService = new PatronService();
+   private HoldingService holdingService = new HoldingService();
+   private BranchService branchService = new BranchService();
+   private ClassificationApi classificationApi;
+
+   @Before
+   public void setUpClassificationService() {
+      classificationApi = mock(ClassificationApi.class);
+      ClassificationApiFactory.setService(classificationApi);
+   }
+
    @Test
    public void deleteAllRemovesAllPatrons() {
-      Patron patron = new Patron("111", "");
-      new PatronService().patronAccess.add(patron);
-
-      new BranchService().add("");
-
-      MockHoldingService holdingService = new MockHoldingService();
-      holdingService.addTestBookToMaterialService(new MaterialDetails("123", "", "", "QA123", MaterialType.Book, ""));
-      holdingService.add("123", Branch.CHECKED_OUT.getScanCode());
+      patronService.patronAccess.add(new Patron("1", ""));
+      branchService.add("2");
+      MaterialDetails material = new MaterialDetails("3", "", "", "", "");
+      when(classificationApi.getMaterialDetails("3")).thenReturn(material);
+      holdingService.add(material.getSourceId(), Branch.CHECKED_OUT.getScanCode());
 
       LibraryData.deleteAll();
 
-      assertTrue(new PatronService().allPatrons().isEmpty());
+      assertTrue(patronService.allPatrons().isEmpty());
       assertTrue(holdingService.allHoldings().isEmpty());
-      assertTrue(new BranchService().allBranches().isEmpty());
+      assertTrue(branchService.allBranches().isEmpty());
    }
 }
