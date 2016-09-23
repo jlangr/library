@@ -1,12 +1,21 @@
 package controller;
 
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+import api.library.HoldingService;
 
 @RestController
 public class HoldingController {
-   @RequestMapping(value = "/holdings", method = { RequestMethod.POST })
-   public int addHolding(@RequestBody AddHoldingRequest request) {
-      System.out.println("request:" + request.getHoldingBarcode());
-      return 1;
+   private HoldingService service = new HoldingService();
+
+   @RequestMapping(value = "/holdings", method = { POST })
+   public void addHolding(@RequestBody AddHoldingRequest request) {
+      service.add(request.getHoldingBarcode(), request.getBranchId());
+   }
+
+   @RequestMapping(value = "/holdings/{holdingBarcode}", method = { GET })
+   public HoldingResponse retrieve(@PathVariable("holdingBarcode") String holdingBarcode) {
+      System.out.println("barcode:" + holdingBarcode);
+      return new HoldingResponse(service.find(holdingBarcode));
    }
 }
