@@ -4,15 +4,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ListUtil {
-   // TODO not tested!
-   @SafeVarargs
-   public static <T> List<T> list(T... values) {
-      List<T> list = new ArrayList<T>();
-      Collections.addAll(list, values);
-      return list;
-   }
-
-   // TODO also not tested
    public <ListType,ToType> List<ToType> map(
          List<ListType> c,
          String methodName,
@@ -33,9 +24,9 @@ public class ListUtil {
       }
    }
 
-   private <T> Method getMethod(String method, Class<T> tClass) {
+   private <T> Method getMethod(String method, Class<T> klass) {
       try {
-         return tClass.getMethod(method);
+         return klass.getMethod(method);
       } catch (Exception e) {
          throw new RuntimeException("invalid method");
       }
