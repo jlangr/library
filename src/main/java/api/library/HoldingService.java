@@ -9,7 +9,8 @@ public class HoldingService {
    private Catalog catalog = new Catalog();
 
    public String add(String sourceId, String branchId) {
-      Holding holding = new Holding(retrieveMaterialDetails(sourceId), findBranch(branchId));
+      Branch branch = findBranch(branchId);
+      Holding holding = new Holding(retrieveMaterialDetails(sourceId), branch);
       catalog.add(holding);
       return holding.getBarCode();
    }

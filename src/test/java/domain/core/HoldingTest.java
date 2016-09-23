@@ -10,6 +10,7 @@ import com.loc.material.api.*;
 import testutil.*;
 import util.*;
 
+// TODO remove constants and use builder
 public class HoldingTest {
    private Holding holding;
    private static final Date TODAY = new Date();
