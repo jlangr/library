@@ -48,7 +48,11 @@ public class HoldingService {
       return catalog.find(barCode);
    }
 
-   public void transfer(Holding holding, Branch branch) {
+   public void transfer(String barcode, String branchScanCode) {
+      Holding holding = find(barcode);
+      if (holding == null)  // TODO test?
+         throw new HoldingNotFoundException();
+      Branch branch = new BranchService().find(branchScanCode);
       holding.transfer(branch);
    }
 

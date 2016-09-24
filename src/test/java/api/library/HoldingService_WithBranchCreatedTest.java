@@ -1,10 +1,8 @@
 package api.library;
 
-import static domain.core.BranchTest.BRANCH_EAST;
-import static domain.core.MaterialTestData.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
 import java.util.Date;
 import org.junit.*;
 import com.loc.material.api.*;
@@ -13,7 +11,6 @@ import domain.core.*;
 public class HoldingService_WithBranchCreatedTest {
    private HoldingService service = new HoldingService();
    private ClassificationApi classificationApi = mock(ClassificationApi.class);
-   private MaterialDetails material = THE_TRIAL;
    private String branchScanCode;
 
    @Before
@@ -25,8 +22,9 @@ public class HoldingService_WithBranchCreatedTest {
    }
 
    private String addHolding() {
-      when(classificationApi.getMaterialDetails(material.getSourceId())).thenReturn(material);
-      return service.add(material.getSourceId(), branchScanCode);
+      MaterialDetails material = new MaterialDetails("123", "", "", "", "");
+      when(classificationApi.getMaterialDetails("123")).thenReturn(material);
+      return service.add("123", branchScanCode);
    }
 
    @Test
@@ -43,7 +41,7 @@ public class HoldingService_WithBranchCreatedTest {
    public void storesNewHoldingAtBranch() {
       String barcode = addHolding();
 
-      assertEquals(branchScanCode, service.find(barcode).getBranch().getScanCode());
+      assertThat(service.find(barcode).getBranch().getScanCode(), equalTo(branchScanCode));
    }
 
    @Test
@@ -54,13 +52,11 @@ public class HoldingService_WithBranchCreatedTest {
    @Test
    public void updatesBranchOnHoldingTransfer() {
       String barcode = addHolding();
+
+      service.transfer(barcode, branchScanCode);
+
       Holding holding = service.find(barcode);
-
-      // TODO change to take a barcode
-      service.transfer(holding, BRANCH_EAST);
-
-      holding = service.find(barcode);
-      assertEquals(BRANCH_EAST, holding.getBranch());
+      assertThat(holding.getBranch().getScanCode(), equalTo(branchScanCode));
    }
 
    @Test

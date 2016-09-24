@@ -7,8 +7,6 @@ import persistence.*;
 import domain.core.*;
 
 public class PatronServiceTest {
-   static String RAVI = "Ravi Sankaran";
-
    PatronService service;
 
    @Before
@@ -20,31 +18,32 @@ public class PatronServiceTest {
    @Test
    public void answersGeneratedId() {
       String scanCode = service.add("name");
-      assertTrue(scanCode.startsWith("p"));
+
+      assertThat(scanCode, startsWith("p"));
    }
 
    @Test
    public void allowsAddingPatronWithId() {
-      service.add("xyz", "p123");
+      service.add("p123", "xyz");
 
       Patron patron = service.find("p123");
 
-      assertThat(patron.getName(), is("xyz"));
+      assertThat(patron.getName(), equalTo("xyz"));
    }
 
    @Test(expected=InvalidPatronIdException.class)
    public void rejectsPatronIdNotStartingWithP() {
-      service.add("", "234");
+      service.add("234", "");
    }
 
    @Test(expected=DuplicatePatronException.class)
    public void rejectsAddOfDuplicatePatron() {
-      service.add("", "p556");
-      service.add("", "p556");
+      service.add("p556", "");
+      service.add("p556", "");
    }
 
    @Test
    public void answersNullWhenPatronNotFound() {
-      assertNull(service.find("nonexistent id"));
+      assertThat(service.find("nonexistent id"), nullValue());
    }
 }
