@@ -3,10 +3,13 @@ package util.matchers;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static util.matchers.LessThan.lessThan;
-
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 public class LessThanTest {
+   @Rule
+   public ExpectedException expectedException = ExpectedException.none();
+
    @Test
    public void passesWhenLessThan() {
       assertThat(5, lessThan(6));
@@ -29,11 +32,9 @@ public class LessThanTest {
 
    @Test
    public void failureMessageIsUseful() {
-      // TODO ? some version difference in Hamcrest
-//      try {
-//         assertThat(6, lessThan(4));
-//      } catch (AssertionError e) {
-//         assertThat(e.getMessage(), equalTo("?"));// containsString("A number less than 4"));
-//      }
+      expectedException.expect(AssertionError.class);
+      expectedException.expectMessage("A number less than 4");
+
+      assertThat(6, lessThan(4));
    }
 }

@@ -1,13 +1,12 @@
 package api.library;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
-import util.ListUtil;
+import static util.matchers.HasExactlyItems.hasExactlyItems;
 import java.util.List;
 import org.junit.*;
 import domain.core.Branch;
-import testutil.CollectionsUtil;
+import util.ListUtil;
 
 public class BranchServiceTest {
    private BranchService service;
@@ -46,16 +45,6 @@ public class BranchServiceTest {
    }
 
    @Test
-   public void capturesBranchFields() {
-      service.add("a branch");
-
-      Branch branch = CollectionsUtil.soleElement(new BranchService().allBranches());
-
-      String name = branch.getName();
-      assertThat(name, equalTo("a branch"));
-   }
-
-   @Test
    public void findsBranchMatchingScanCode() {
       String scanCode = service.add("a branch");
 
@@ -73,7 +62,6 @@ public class BranchServiceTest {
       List<Branch> all = service.allBranches();
 
       List<String> scanCodes = new ListUtil().map(all, "getScanCode", Branch.class, String.class);
-      // TODO create custom hamcrest matcher
-      assertThat(scanCodes, equalTo(asList(eastScanCode, westScanCode)));
+      assertThat(scanCodes, hasExactlyItems(eastScanCode, westScanCode));
    }
 }
