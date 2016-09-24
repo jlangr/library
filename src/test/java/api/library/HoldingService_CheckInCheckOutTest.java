@@ -1,15 +1,16 @@
 package api.library;
 
-import static domain.core.BranchTest.EAST_SCAN;
-import static domain.core.MaterialTestData.*;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static util.matchers.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
 import java.util.Date;
 import org.junit.*;
 import com.loc.material.api.*;
 import domain.core.*;
 import util.DateUtil;
+
+// TODO stub to avoid persistence (even despite being in memory)
 
 public class HoldingService_CheckInCheckOutTest {
    private HoldingService service = new HoldingService();
@@ -17,6 +18,7 @@ public class HoldingService_CheckInCheckOutTest {
    private ClassificationApi classificationApi = mock(ClassificationApi.class);
    private String patronId;
    private String branchScanCode;
+   private String bookHoldingBarcode;
 
    @Before
    public void initialize() {
@@ -24,19 +26,20 @@ public class HoldingService_CheckInCheckOutTest {
       ClassificationApiFactory.setService(classificationApi);
       branchScanCode = new BranchService().add("a branch name");
       patronId = patronService.add("joe");
+      bookHoldingBarcode = addBookHolding();
    }
 
-   private String addHolding(MaterialDetails material) {
-      when(classificationApi.getMaterialDetails(material.getSourceId())).thenReturn(material);
-      return service.add(material.getSourceId(), branchScanCode);
+   private String addBookHolding() {
+      MaterialDetails material = new MaterialDetails("123", "", "", "", MaterialType.Book, "");
+      when(classificationApi.getMaterialDetails("123")).thenReturn(material);
+      return service.add("123", branchScanCode);
    }
 
    @Test
    public void holdingMadeUnavailableOnCheckout() {
-      String barcode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barcode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      assertThat(service.isAvailable(barcode), is(false));
+      assertThat(service.isAvailable(bookHoldingBarcode), equalTo(false));
    }
 
    @Test(expected = HoldingNotFoundException.class)
@@ -46,78 +49,67 @@ public class HoldingService_CheckInCheckOutTest {
 
    @Test(expected = HoldingAlreadyCheckedOutException.class)
    public void checkoutThrowsWhenUnavailable() {
-      String barcode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barcode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      service.checkOut(patronId, barcode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
    }
 
    @Test
    public void updatesPatronWithHoldingOnCheckout() {
-      String barcode = addHolding(THE_TRIAL);
-
-      service.checkOut(patronId, barcode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
       HoldingMap patronHoldings = patronService.find(patronId).holdings();
-      assertEquals(1, patronHoldings.size());
-      assertTrue(patronHoldings.contains(service.find(barcode)));
+      assertThat(patronHoldings.holdings(), hasExactlyItemsInAnyOrder(service.find(bookHoldingBarcode)));
    }
 
    @Test
    public void returnsHoldingToBranchOnCheckIn() {
-      String barCode = addHolding(AGILE_JAVA);
-      service.checkOut(patronId, barCode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      service.checkIn(barCode, DateUtil.tomorrow(), branchScanCode);
+      service.checkIn(bookHoldingBarcode, DateUtil.tomorrow(), branchScanCode);
 
-      Holding holding = service.find(barCode);
+      Holding holding = service.find(bookHoldingBarcode);
       assertTrue(holding.isAvailable());
-      assertEquals(branchScanCode, holding.getBranch().getScanCode());
+      assertThat(holding.getBranch().getScanCode(), equalTo(branchScanCode));
    }
 
    @Test
    public void removesHoldingFromPatronOnCheckIn() {
-      String barCode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barCode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      service.checkIn(barCode, DateUtil.tomorrow(), branchScanCode);
+      service.checkIn(bookHoldingBarcode, DateUtil.tomorrow(), branchScanCode);
 
       assertTrue(patronService.find(patronId).holdings().isEmpty());
    }
 
-   // TODO stub to avoid persistence (even despite being in memory)
-
    @Test
    public void answersDueDate() {
-      String barCode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barCode, new Date());
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      Date due = service.dateDue(barCode);
+      Date due = service.dateDue(bookHoldingBarcode);
 
-      Holding holding = service.find(barCode);
-      assertThat(due, is(holding.dateDue()));
+      Holding holding = service.find(bookHoldingBarcode);
+      assertThat(due, equalTo(holding.dateDue()));
    }
 
    @Test
    public void checkinReturnsDaysLate() {
-      String barCode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barCode, new Date());
-      Date fiveDaysLate = DateUtil.addDays(service.dateDue(barCode), 5);
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
+      Date fiveDaysLate = DateUtil.addDays(service.dateDue(bookHoldingBarcode), 5);
 
-      int daysLate = service.checkIn(barCode, fiveDaysLate, EAST_SCAN);
+      int daysLate = service.checkIn(bookHoldingBarcode, fiveDaysLate, branchScanCode);
 
-      assertThat(daysLate, is(5));
+      assertThat(daysLate, equalTo(5));
    }
 
    @Test
    public void updatesFinesOnLateCheckIn() {
-      String barCode = addHolding(THE_TRIAL);
-      service.checkOut(patronId, barCode, new Date());
-      Holding holding = service.find(barCode);
+      service.checkOut(patronId, bookHoldingBarcode, new Date());
+      Holding holding = service.find(bookHoldingBarcode);
       Date oneDayLate = DateUtil.addDays(holding.dateDue(), 1);
 
-      service.checkIn(barCode, oneDayLate, branchScanCode);
+      service.checkIn(bookHoldingBarcode, oneDayLate, branchScanCode);
 
-      assertEquals(MaterialType.Book.getDailyFine(), patronService.find(patronId).fineBalance());
+      assertThat(patronService.find(patronId).fineBalance(), equalTo(MaterialType.Book.getDailyFine()));
    }
 }
