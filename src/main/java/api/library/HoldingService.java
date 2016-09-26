@@ -12,7 +12,7 @@ public class HoldingService {
       Branch branch = findBranch(branchId);
       Holding holding = new Holding(retrieveMaterialDetails(sourceId), branch);
       catalog.add(holding);
-      return holding.getBarCode();
+      return holding.getBarcode();
    }
 
    private MaterialDetails retrieveMaterialDetails(String sourceId) {
@@ -93,7 +93,7 @@ public class HoldingService {
       for (Patron p: new PatronService().allPatrons()) {
          holdings = p.holdings();
          for (Holding patHld: holdings) {
-            if (hld.getBarCode().equals(patHld.getBarCode()))
+            if (hld.getBarcode().equals(patHld.getBarcode()))
                f = p;
          }
       }
