@@ -54,9 +54,4 @@ public class MaterialDetails {
    public MaterialType getFormat() {
       return format;
    }
-
-   @Override
-   public String toString() {
-      return sourceId + ": " + author + " " + title + " " + year + " " + classification;
-   }
 }
