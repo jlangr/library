@@ -4,7 +4,7 @@ import java.util.*;
 import domain.core.Branch;
 
 public class BranchStore {
-   private static Map<String, Branch> branches = new HashMap<String, Branch>();
+   private static Map<String, Branch> branches = new HashMap<>();
    private static int idIndex = 0;
 
    public void save(Branch branch) {
@@ -13,7 +13,7 @@ public class BranchStore {
       branches.put(branch.getName(), copy(branch));
    }
 
-   public Branch find(String name) {
+   public Branch findByName(String name) {
       return branches.get(name);
    }
 
@@ -21,10 +21,9 @@ public class BranchStore {
       if (scanCode.equals(Branch.CHECKED_OUT.getScanCode()))
          return Branch.CHECKED_OUT;
 
-      for (Branch branch: branches.values()) {
+      for (Branch branch: branches.values())
          if (branch.getScanCode().equals(scanCode))
             return branch;
-      }
       return null;
    }
 

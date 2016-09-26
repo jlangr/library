@@ -50,7 +50,7 @@ public class HoldingService {
 
    public void transfer(String barcode, String branchScanCode) {
       Holding holding = find(barcode);
-      if (holding == null)  // TODO test?
+      if (holding == null)
          throw new HoldingNotFoundException();
       Branch branch = new BranchService().find(branchScanCode);
       holding.transfer(branch);
@@ -91,7 +91,7 @@ public class HoldingService {
       // could introduce a patron reference ID in the holding...
       Patron f = null;
       for (Patron p: new PatronService().allPatrons()) {
-         holdings = p.holdings();
+         holdings = p.holdingMap();
          for (Holding patHld: holdings) {
             if (hld.getBarcode().equals(patHld.getBarcode()))
                f = p;

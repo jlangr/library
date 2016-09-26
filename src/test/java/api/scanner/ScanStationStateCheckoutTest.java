@@ -1,27 +1,17 @@
 package api.scanner;
 
-import static api.scanner.ScanStationStateCheckout.MSG_CHECKED_OUT;
-import static api.scanner.ScanStationStateCheckout.MSG_COMPLETED_CHECKOUT;
-import static api.scanner.ScanStationStateCheckout.MSG_COMPLETE_CHECKOUT_FIRST;
-import static api.scanner.ScanStationStateCheckout.MSG_INVALID_HOLDING_ID;
-import static api.scanner.ScanStationTestData.BRANCH_WEST_ID;
-import static api.scanner.ScanStationTestData.HOLDING_ANIMAL_FARM;
-import static api.scanner.ScanStationTestData.PATRON_JOE;
-import static api.scanner.ScanStationTestData.PATRON_JOE_ID;
-import static org.hamcrest.CoreMatchers.is;
+import static api.scanner.ScanStationStateCheckout.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import util.DateUtilTest;
-import util.TimestampSource;
-import domain.core.Holding;
+import static org.mockito.Mockito.*;
+import org.junit.*;
+import domain.core.*;
+import util.*;
 
 public class ScanStationStateCheckoutTest extends ScanStationStateTestBase {
+   public static final String PATRON_JOE_ID = "p111";
+   public static final Patron PATRON_JOE = new Patron(PATRON_JOE_ID, "Joe");
+
    private Holding holdingWithAvailability;
    private Holding holdingWithUnavailability;
 
@@ -66,47 +56,39 @@ public class ScanStationStateCheckoutTest extends ScanStationStateTestBase {
    @Test
    public void displaysMessageIfNoHoldingExists() {
       scanner.scanPatronId(PATRON_JOE_ID);
-      when(holdingService.find(HOLDING_ANIMAL_FARM)).thenReturn(null);
+      when(holdingService.find("123:1")).thenReturn(null);
 
-      state.scanHolding(HOLDING_ANIMAL_FARM);
+      state.scanHolding("123:1");
 
-      assertMessageDisplayed(String.format(MSG_INVALID_HOLDING_ID,
-            HOLDING_ANIMAL_FARM));
+      assertMessageDisplayed(String.format(MSG_INVALID_HOLDING_ID, "123:1"));
       assertStateUnchanged();
    }
 
    @Test
    public void checksOutHoldingWhenHoldingIdScanned() {
       scanner.scanPatronId(PATRON_JOE_ID);
-      when(holdingService.find(HOLDING_ANIMAL_FARM)).thenReturn(
-            holdingWithAvailability);
+      when(holdingService.find("123:1")).thenReturn(holdingWithAvailability);
       TimestampSource.queueNextTime(DateUtilTest.NEW_YEARS_DAY);
 
-      state.scanHolding(HOLDING_ANIMAL_FARM);
+      state.scanHolding("123:1");
 
-      verify(holdingService).checkOut(PATRON_JOE_ID, HOLDING_ANIMAL_FARM,
-            DateUtilTest.NEW_YEARS_DAY);
-      assertMessageDisplayed(String
-            .format(MSG_CHECKED_OUT, HOLDING_ANIMAL_FARM));
+      verify(holdingService).checkOut(PATRON_JOE_ID, "123:1", DateUtilTest.NEW_YEARS_DAY);
+      assertMessageDisplayed(String.format(MSG_CHECKED_OUT, "123:1"));
       assertStateUnchanged();
    }
 
    @Test
    public void displaysMessageWhenBookCheckedOutTwice() {
       scanner.scanPatronId(PATRON_JOE_ID);
-      when(holdingService.find(HOLDING_ANIMAL_FARM)).thenReturn(
-            holdingWithAvailability);
-      state.scanHolding(HOLDING_ANIMAL_FARM);
-      when(holdingService.find(HOLDING_ANIMAL_FARM)).thenReturn(
-            holdingWithUnavailability);
+      when(holdingService.find("123:1")).thenReturn(holdingWithAvailability);
+      state.scanHolding("123:1");
+      when(holdingService.find("123:1")).thenReturn(holdingWithUnavailability);
 
-      state.scanHolding(HOLDING_ANIMAL_FARM);
+      state.scanHolding("123:1");
 
-      assertMessageDisplayed(String.format(
-            ScanStationStateCheckout.MSG_ALREADY_CHECKED_OUT,
-            HOLDING_ANIMAL_FARM));
+      assertMessageDisplayed(String.format(ScanStationStateCheckout.MSG_ALREADY_CHECKED_OUT, "123:1"));
       assertStateUnchanged();
-      assertThat(TimestampSource.isExhausted(), is(true));
+      assertThat(TimestampSource.isExhausted(), equalTo(true));
    }
 
    @Test
@@ -116,13 +98,12 @@ public class ScanStationStateCheckoutTest extends ScanStationStateTestBase {
       state.pressComplete();
 
       assertCurrentState(ScanStationStateReturns.class);
-      assertMessageDisplayed(String.format(MSG_COMPLETED_CHECKOUT,
-            PATRON_JOE_ID));
+      assertMessageDisplayed(String.format(MSG_COMPLETED_CHECKOUT, PATRON_JOE_ID));
    }
 
    @Test
    public void displaysWarningWhenBranchIdScanned() {
-      state.scanBranchId(BRANCH_WEST_ID);
+      state.scanBranchId("b123");
 
       assertStateUnchanged();
       assertMessageDisplayed(MSG_COMPLETE_CHECKOUT_FIRST);

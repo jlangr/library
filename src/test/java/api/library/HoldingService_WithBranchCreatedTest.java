@@ -59,6 +59,11 @@ public class HoldingService_WithBranchCreatedTest {
       assertThat(holding.getBranch().getScanCode(), equalTo(branchScanCode));
    }
 
+   @Test(expected = HoldingNotFoundException.class)
+   public void throwsOnTransferOfNonexistentHolding() {
+      service.transfer("XXX:1", branchScanCode);
+   }
+
    @Test
    public void holdingIsAvailableWhenNotCheckedOut() {
       String barcode = addHolding();

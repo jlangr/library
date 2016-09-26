@@ -25,7 +25,6 @@ public abstract class ScanStationStateTestBase extends MockedScannerSubsystemFie
 
    protected void assertStateUnchanged() {
       assertSame(scanner.getCurrentState(), state);
-      // assertThat(scanner.getCurrentState(), is(sameInstance((ScanStationState)state))); // ew!
    }
 
    protected void assertCurrentState(Class<?> expectedState) {

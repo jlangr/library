@@ -1,22 +1,10 @@
 package api.scanner;
 
-import static api.scanner.ScanStationTestData.BRANCH_EAST;
-import static api.scanner.ScanStationTestData.BRANCH_EAST_ID;
-import static api.scanner.ScanStationTestData.BRANCH_WEST;
-import static api.scanner.ScanStationTestData.HOLDING_ANIMAL_FARM;
-import static api.scanner.ScanStationTestData.INVENTORY_ID;
-import static api.scanner.ScanStationTestData.PATRON_JANE;
-import static api.scanner.ScanStationTestData.PATRON_JANE_ID;
-import static api.scanner.ScanStationTestData.PATRON_JOE;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
 import org.junit.Test;
+import domain.core.*;
 
 public class ScanStationTest extends MockedScannerSubsystemFields {
    private ScanStationState state;
@@ -28,50 +16,49 @@ public class ScanStationTest extends MockedScannerSubsystemFields {
 
    @Test
    public void initializesToWaitingState() {
-      assertThat(scanner.getCurrentState(),
-            instanceOf(ScanStationStateWaiting.class));
+      assertThat(scanner.getCurrentState(), instanceOf(ScanStationStateWaiting.class));
    }
 
    @Test
    public void branchIdScannedDelegatesToScanBranchId() {
       setScannerToMockState();
 
-      scanner.scan(BRANCH_EAST_ID);
+      scanner.scan("b123");
 
-      verify(state).scanBranchId(BRANCH_EAST_ID);
+      verify(state).scanBranchId("b123");
    }
 
    @Test
    public void holdingBarcodeScannedDelegatesToScanHolding() {
       setScannerToMockState();
 
-      scanner.scan(HOLDING_ANIMAL_FARM);
+      scanner.scan("123:1");
 
-      verify(state).scanHolding(HOLDING_ANIMAL_FARM);
+      verify(state).scanHolding("123:1");
    }
 
    @Test
    public void patronIdScannedDelegatesToScanPatron() {
       setScannerToMockState();
 
-      scanner.scan(PATRON_JANE_ID);
+      scanner.scan("p123");
 
-      verify(state).scanPatron(PATRON_JANE_ID);
+      verify(state).scanPatron("p123");
    }
-   
-   
+
    @Test
    public void displaysErrorWhenInvalidBarcodeScanned() {
       scanner.scan("123");
-      
+
       verify(display).showMessage(ScanStation.MSG_BAR_CODE_NOT_RECOGNIZED);
    }
 
    @Test
    public void inventoryIdScannedDelegatesToScanInventoryCard() {
       setScannerToMockState();
+      String validInventoryId = "i" + "whatever";
 
-      scanner.scan(INVENTORY_ID);
+      scanner.scan(validInventoryId);
 
       verify(state).scanInventoryCard();
    }
@@ -94,14 +81,13 @@ public class ScanStationTest extends MockedScannerSubsystemFields {
 
    @Test
    public void setPatronIdUpdatesPatronIfExists() {
-      scanner.setPatron(PATRON_JOE);
-      when(patronService.find(PATRON_JANE_ID)).thenReturn(PATRON_JANE);
+      Patron jane = new Patron("p123", "jane");
+      when(patronService.find("p123")).thenReturn(jane);
 
-      scanner.scanPatronId(PATRON_JANE_ID);
+      scanner.scanPatronId("p123");
 
-      assertThat(scanner.getPatron(), is(sameInstance(PATRON_JANE)));
-      assertMessageDisplayed(String.format(ScanStation.MSG_PATRON_SET_TO,
-            PATRON_JANE.getName()));
+      assertThat(scanner.getPatron(), is(sameInstance(jane)));
+      assertMessageDisplayed(String.format(ScanStation.MSG_PATRON_SET_TO, "jane"));
    }
 
    private void assertMessageDisplayed(String text) {
@@ -110,37 +96,34 @@ public class ScanStationTest extends MockedScannerSubsystemFields {
 
    @Test
    public void setPatronIdDoesNotUpdatePatronIfNotExists() {
-      scanner.setPatron(PATRON_JOE);
-      when(patronService.find(PATRON_JANE_ID)).thenReturn(null);
+      when(patronService.find("p123")).thenReturn(null);
 
-      scanner.scanPatronId(PATRON_JANE_ID);
+      scanner.scanPatronId("p123");
 
-      assertThat(scanner.getPatron(), is(sameInstance(PATRON_JOE)));
-      assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_PATRON,
-            PATRON_JANE_ID));
+      assertThat(scanner.getPatron(), is(nullValue()));
+      assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_PATRON, "p123"));
    }
 
    @Test
    public void setBranchIdUpdatesBranchIfExists() {
-      scanner.setBranch(BRANCH_WEST);
-      when(branchService.find(BRANCH_EAST_ID)).thenReturn(BRANCH_EAST);
+      Branch branch = new Branch("b123", "West");
+      when(branchService.find("b123")).thenReturn(branch);
 
-      scanner.scanBranchId(BRANCH_EAST_ID);
+      scanner.scanBranchId("b123");
 
-      assertThat(scanner.getBranch(), is(sameInstance(BRANCH_EAST)));
-      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO,
-            BRANCH_EAST.getName()));
+      assertThat(scanner.getBranch(), is(sameInstance(branch)));
+      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, "West"));
    }
 
    @Test
    public void setBranchIdDoesNotUpdateBranchIfNotExists() {
-      scanner.setBranch(BRANCH_WEST);
-      when(branchService.find(BRANCH_EAST_ID)).thenReturn(null);
+      Branch westBranch = new Branch("b222", "");
+      scanner.setBranch(westBranch);
+      when(branchService.find("b123")).thenReturn(null);
 
-      scanner.scanBranchId(BRANCH_EAST_ID);
+      scanner.scanBranchId("b123");
 
-      assertThat(scanner.getBranch(), is(sameInstance(BRANCH_WEST)));
-      assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_BRANCH,
-            BRANCH_EAST_ID));
+      assertThat(scanner.getBranch(), is(sameInstance(westBranch)));
+      assertMessageDisplayed(String.format(ScanStation.MSG_NONEXISTENT_BRANCH, "b123"));
    }
 }

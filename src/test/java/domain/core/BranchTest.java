@@ -14,12 +14,12 @@ public class BranchTest {
 
    @Test
    public void supportsEquality() {
-      Branch branch1 = new Branch("east", "b111");
-      Branch branch1Copy1 = new Branch("east", "b111");
-      Branch branch1Copy2 = new Branch("east", "b111");
-      Branch branch1Subtype = new Branch("east", "b111") {
+      Branch branch1 = new Branch("b111", "east");
+      Branch branch1Copy1 = new Branch("b111", "east");
+      Branch branch1Copy2 = new Branch("b111", "east");
+      Branch branch1Subtype = new Branch("b111", "east") {
       };
-      Branch branch2 = new Branch("west", "b222");
+      Branch branch2 = new Branch("b222", "west");
 
       new EqualityTester(branch1, branch1Copy1, branch1Copy2, branch2, branch1Subtype).verify();
    }

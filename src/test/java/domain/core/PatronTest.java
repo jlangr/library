@@ -26,7 +26,7 @@ public class PatronTest {
 
    @Test
    public void holdingsAreEmptyOnCreation() {
-      assertTrue(jane.holdings().isEmpty());
+      assertTrue(jane.holdingMap().isEmpty());
    }
 
    @Test
@@ -35,7 +35,7 @@ public class PatronTest {
 
       jane.add(holding);
 
-      assertThat(jane.holdings().holdings(), hasExactlyItemsInAnyOrder(holding));
+      assertThat(jane.holdingMap().holdings(), hasExactlyItemsInAnyOrder(holding));
    }
 
    @Test
@@ -45,7 +45,7 @@ public class PatronTest {
 
       jane.remove(holding);
 
-      assertTrue(jane.holdings().isEmpty());
+      assertTrue(jane.holdingMap().isEmpty());
    }
 
    @Test

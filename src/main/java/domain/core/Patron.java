@@ -42,7 +42,7 @@ public class Patron {
       return this.getId().equals(that.getId());
    }
 
-   public HoldingMap holdings() {
+   public HoldingMap holdingMap() {
       return s;
    }
 

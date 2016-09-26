@@ -1,14 +1,11 @@
 package api.scanner;
 
 import static api.scanner.ScanStationStateWaiting.MSG_SCAN_BRANCH_ID_FIRST;
-import static api.scanner.ScanStationTestData.BRANCH_EAST;
-import static api.scanner.ScanStationTestData.BRANCH_WEST;
-import static api.scanner.ScanStationTestData.BRANCH_WEST_ID;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-
 import org.junit.Test;
+import domain.core.Branch;
 
 public class ScanStationStateWaitingTest extends ScanStationStateTestBase {
    @Override
@@ -18,15 +15,15 @@ public class ScanStationStateWaitingTest extends ScanStationStateTestBase {
 
    @Test
    public void storesBranchIdWhenBranchCardScanned() {
-      when(branchService.find(BRANCH_WEST_ID)).thenReturn(BRANCH_WEST);
-      scanner.setBranch(BRANCH_EAST);
+      Branch westBranch = new Branch("b123", "west");
+      when(branchService.find("b123")).thenReturn(westBranch);
+      scanner.setBranch(new Branch("b999", "other"));
 
-      state.scanBranchId(BRANCH_WEST_ID);
+      state.scanBranchId("b123");
 
       assertCurrentState(ScanStationStateReturns.class);
-      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO,
-            BRANCH_WEST.getName()));
-      assertThat(scanner.getBranchId(), is(BRANCH_WEST_ID));
+      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, westBranch.getName()));
+      assertThat(scanner.getBranchId(), equalTo("b123"));
    }
 
    @Test

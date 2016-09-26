@@ -1,7 +1,6 @@
 package api.scanner;
 
 import static api.scanner.ScanStationStateInventory.*;
-import static api.scanner.ScanStationTestData.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -28,33 +27,30 @@ public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
 
    @Test
    public void changesBranchWhenBranchIdScanned() {
-      assertThat(scanner.getBranchId(), not(equalTo(BRANCH_WEST_ID)));
-      when(branchService.find(BRANCH_WEST_ID)).thenReturn(
-            new Branch("West", BRANCH_WEST_ID));
+      when(branchService.find("b222")).thenReturn(new Branch("b222", "West"));
 
-      state.scanBranchId(BRANCH_WEST_ID);
+      state.scanBranchId("b222");
 
-      assertThat(scanner.getBranchId(), equalTo(BRANCH_WEST_ID));
-      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO,
-            "West"));
+      assertThat(scanner.getBranchId(), equalTo("b222"));
+      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO, "West"));
       assertStateUnchanged();
    }
 
    @Test
    public void addsNewHoldingToLibraryWhenSourceIdScanned() {
       String sourceId = "1234567890123";
-      scanner.setBranch(BRANCH_WEST);
+      scanner.setBranch(new Branch("b123", ""));
 
       state.scanHolding(sourceId);
 
-      verify(holdingService).add(sourceId, BRANCH_WEST_ID);
+      verify(holdingService).add(sourceId, "b123");
       assertStateUnchanged();
       assertMessageDisplayed(String.format(MSG_SCANNED_HOLDING, sourceId));
    }
 
    @Test
    public void displaysWarningWhenPatronCardScanned() {
-      state.scanPatron(PATRON_JOE_ID);
+      state.scanPatron("p123");
 
       assertStateRetainedWithMessage(MSG_COMPLETE_INVENTORY_FIRST);
    }
@@ -63,7 +59,6 @@ public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
    public void changesStateToReturnsWhenCompletePressed() {
       state.pressComplete();
 
-      assertThat(scanner.getCurrentState(),
-            is(instanceOf(ScanStationStateReturns.class)));
+      assertThat(scanner.getCurrentState(), is(instanceOf(ScanStationStateReturns.class)));
    }
 }

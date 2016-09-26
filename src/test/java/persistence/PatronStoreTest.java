@@ -73,8 +73,7 @@ public class PatronStoreTest {
 
       Patron patron = store.find(patronSmith.getId());
 
-      // TODO ew
-      assertThat(patron.holdings().holdings(), hasExactlyItemsInAnyOrder(holding));
+      assertThat(patron.holdingMap().holdings(), hasExactlyItemsInAnyOrder(holding));
    }
 
    @Test(expected = PatronNotFoundException.class)

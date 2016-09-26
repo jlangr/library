@@ -58,7 +58,7 @@ public class HoldingService_CheckInCheckOutTest {
    public void updatesPatronWithHoldingOnCheckout() {
       service.checkOut(patronId, bookHoldingBarcode, new Date());
 
-      HoldingMap patronHoldings = patronService.find(patronId).holdings();
+      HoldingMap patronHoldings = patronService.find(patronId).holdingMap();
       assertThat(patronHoldings.holdings(), hasExactlyItemsInAnyOrder(service.find(bookHoldingBarcode)));
    }
 
@@ -79,7 +79,7 @@ public class HoldingService_CheckInCheckOutTest {
 
       service.checkIn(bookHoldingBarcode, DateUtil.tomorrow(), branchScanCode);
 
-      assertTrue(patronService.find(patronId).holdings().isEmpty());
+      assertTrue(patronService.find(patronId).holdingMap().isEmpty());
    }
 
    @Test

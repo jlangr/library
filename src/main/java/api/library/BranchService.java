@@ -21,7 +21,7 @@ public class BranchService {
 
    public String add(String name, String scanCode) {
       if (!scanCode.startsWith("b")) throw new InvalidBranchCodeException();
-      return save(new Branch(name, scanCode));
+      return save(new Branch(scanCode, name));
    }
 
    private String save(Branch branch) {
