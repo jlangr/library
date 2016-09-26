@@ -11,7 +11,7 @@ public class HoldingResponse {
    private String format;
 
    public HoldingResponse(Holding holding) {
-      holding.getBarCode();
+      holding.getBarcode();
       holding.getCopyNumber();
 
       MaterialDetails material = holding.getMaterial();

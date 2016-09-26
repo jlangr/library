@@ -15,12 +15,12 @@ public class PatronTest {
 
    @Test
    public void defaultsIdToEmpty() {
-      assertThat(jane.getId(), is(""));
+      assertThat(jane.getId(), equalTo(""));
    }
 
    @Test
    public void fineBalanceIsZeroOnCreation() {
-      assertEquals(0, jane.fineBalance());
+      assertThat(jane.fineBalance(), equalTo(0));
    }
 
    @Test
@@ -30,17 +30,16 @@ public class PatronTest {
 
    @Test
    public void returnsHoldingsAdded() {
-      Holding holding = new Holding(MaterialTestData.THE_TRIAL, new Branch(""));
+      Holding holding = new HoldingBuilder().create();
 
       jane.add(holding);
 
-      assertEquals(1, jane.holdings().size());
-      assertTrue(jane.holdings().contains(holding));
+      CollectionsUtil.assertSoleElement(jane.holdings().holdings(), holding);
    }
 
    @Test
    public void removesHoldingFromPatron() {
-      Holding holding = new Holding(MaterialTestData.THE_TRIAL, new Branch(""));
+      Holding holding = new HoldingBuilder().create();
       jane.add(holding);
 
       jane.remove(holding);
@@ -51,33 +50,36 @@ public class PatronTest {
    @Test
    public void storesFines() {
       jane.addFine(10);
-      assertEquals(10, jane.fineBalance());
+
+      assertThat(jane.fineBalance(), equalTo(10));
    }
 
    @Test
    public void increasesBalanceOnAdditionalFines() {
       jane.addFine(10);
+
       jane.addFine(30);
-      assertEquals(40, jane.fineBalance());
+
+      assertThat(jane.fineBalance(), equalTo(40));
    }
 
    @Test
    public void decreasesBalanceWhenPatronRemitsAmount() {
       jane.addFine(40);
+
       jane.remit(25);
-      assertEquals(15, jane.fineBalance());
-      jane.remit(15);
-      assertEquals(0, jane.fineBalance());
+
+      assertThat(jane.fineBalance(), equalTo(15));
    }
 
    @Test
    public void supportsEqualityComparison() {
-      Patron patron1 = new Patron("Joe", "p1");
-      Patron patron1Copy1 = new Patron("", "p1");
-      Patron patron1Copy2 = new Patron("", "p1");
-      Patron patron1Subtype = new Patron("", "p1") {
+      Patron patron1 = new Patron("p1", "Joe");
+      Patron patron1Copy1 = new Patron("p1", "");
+      Patron patron1Copy2 = new Patron("p1", "");
+      Patron patron1Subtype = new Patron("p1", "") {
       };
-      Patron patron2 = new Patron("", "p2");
+      Patron patron2 = new Patron("p2", "");
 
       new EqualityTester(patron1, patron1Copy1, patron1Copy2, patron2, patron1Subtype).verify();
    }

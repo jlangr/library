@@ -17,7 +17,7 @@ public class HoldingMap implements Iterable<Holding> {
    }
 
    public void add(Holding holding) {
-      holdings.put(holding.getBarCode(), holding);
+      holdings.put(holding.getBarcode(), holding);
    }
 
    public Holding get(String barCode) {
@@ -25,7 +25,7 @@ public class HoldingMap implements Iterable<Holding> {
    }
 
    public boolean contains(Holding holding) {
-      return holdings.containsKey(holding.getBarCode());
+      return holdings.containsKey(holding.getBarcode());
    }
 
    public Collection<Holding> holdings() {
@@ -33,7 +33,7 @@ public class HoldingMap implements Iterable<Holding> {
    }
 
    public void remove(Holding holding) {
-      holdings.remove(holding.getBarCode());
+      holdings.remove(holding.getBarcode());
    }
 
    @Override

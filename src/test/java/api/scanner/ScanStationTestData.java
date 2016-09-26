@@ -12,8 +12,8 @@ public class ScanStationTestData {
    public static final String PATRON_JOE_ID = "p111";
    public static final String PATRON_JANE_ID = "p222";
 
-   public static final Patron PATRON_JOE = new Patron("Joe", PATRON_JOE_ID);
-   public static final Patron PATRON_JANE = new Patron("Jane", PATRON_JANE_ID);
+   public static final Patron PATRON_JOE = new Patron(PATRON_JOE_ID, "Joe");
+   public static final Patron PATRON_JANE = new Patron(PATRON_JANE_ID, "Jane");
 
    public static final String HOLDING_ANIMAL_FARM = "123:1";
    public static final String HOLDING_CATCH22_COPY_1 = "234:1";

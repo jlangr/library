@@ -1,13 +1,10 @@
 package persistence;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import util.MultiMap;
+import java.util.*;
 import domain.core.Holding;
 
-public class HoldingStore {
+public class HoldingStore implements Iterable<Holding> {
    private static MultiMap<String, Holding> holdings = new MultiMap<String, Holding>();
 
    public static void deleteAll() {
@@ -23,23 +20,19 @@ public class HoldingStore {
             holding.getCopyNumber());
    }
 
-   public List<Holding> findAll(String classification) {
+   public List<Holding> findByClassification(String classification) {
       List<Holding> results = holdings.get(classification);
       if (results == null)
          return new ArrayList<Holding>();
       return results;
    }
 
-   public Collection<Holding> getAll() {
-      return holdings.values();
-   }
-
-   public Holding find(String barCode) {
+   public Holding findByBarcode(String barCode) {
       List<Holding> results = holdings.get(classificationFrom(barCode));
       if (results == null)
          return null;
       for (Holding holding: results)
-         if (holding.getBarCode().equals(barCode))
+         if (holding.getBarcode().equals(barCode))
             return holding;
       return null;
    }
@@ -47,5 +40,14 @@ public class HoldingStore {
    private String classificationFrom(String barCode) {
       int index = barCode.indexOf(Holding.BARCODE_SEPARATOR);
       return barCode.substring(0, index);
+   }
+
+   public int size() {
+      return holdings.size();
+   }
+
+   @Override
+   public Iterator<Holding> iterator() {
+      return holdings.values().iterator();
    }
 }

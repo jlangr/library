@@ -8,7 +8,7 @@ import domain.core.*;
 
 public class PatronStoreTest {
    private PatronStore store;
-   private static Patron joe = new Patron("joe", "p1");
+   private static Patron joe = new Patron("p1", "joe");
 
    @Before
    public void initialize() {
@@ -45,7 +45,7 @@ public class PatronStoreTest {
    
    @Test
    public void doesNotOverwriteIdIfExists() {
-      Patron patron = new Patron("a", "p12345");
+      Patron patron = new Patron("p12345", "a");
       
       store.add(patron);
       
@@ -73,7 +73,7 @@ public class PatronStoreTest {
       Patron patron = CollectionsUtil.soleElement(patrons);
       HoldingMap holdings = patron.holdings();
       assertEquals(1, holdings.size());
-      Holding retrieved = holdings.get(holding.getBarCode());
+      Holding retrieved = holdings.get(holding.getBarcode());
       assertEquals(MaterialTestData.THE_TRIAL, retrieved.getMaterial());
       assertEquals(Branch.CHECKED_OUT, retrieved.getBranch());
    }
@@ -95,7 +95,7 @@ public class PatronStoreTest {
 
    @Test
    public void returnsPersistedPatronAsNewInstance() {
-      Patron patron = new Patron("Joe", "p1");
+      Patron patron = new Patron("p1", "Joe");
       store.add(patron);
 
       Patron found = store.find("p1");

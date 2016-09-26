@@ -62,7 +62,7 @@ public class CatalogTest {
       List<Holding> retrieved = catalog.findAll("123");
 
       assertThat(retrieved.size(), equalTo(1));
-      assertThat(retrieved.get(0).getBarCode(), equalTo(barcode1));
+      assertThat(retrieved.get(0).getBarcode(), equalTo(barcode1));
    }
 
    @Test
@@ -93,7 +93,7 @@ public class CatalogTest {
 
       List<String> results = new ArrayList<>();
       for (Holding holding: catalog)
-         results.add(holding.getBarCode());
+         results.add(holding.getBarcode());
 
       assertThat(results, hasExactlyItems(barcode1, barcode2));
    }

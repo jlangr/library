@@ -6,13 +6,13 @@ public class Patron {
    private HoldingMap s = new HoldingMap();
    private int bal = 0;
 
-   public Patron(String name, String id) {
+   public Patron(String id, String name) {
       this.name = name;
       this.id = id;
    }
 
    public Patron(String name) {
-      this(name, "");
+      this("", name);
    }
 
    public String getId() {

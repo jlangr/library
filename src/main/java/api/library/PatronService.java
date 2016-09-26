@@ -14,7 +14,7 @@ public class PatronService {
 
    public String add(String id, String name) {
       if (!id.startsWith("p")) throw new InvalidPatronIdException();
-      return save(new Patron(name, id));
+      return save(new Patron(id, name));
    }
 
    private String save(Patron newPatron) {

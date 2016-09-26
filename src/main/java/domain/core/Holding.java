@@ -38,7 +38,7 @@ public class Holding {
       return copyNumber;
    }
 
-   public String getBarCode() {
+   public String getBarcode() {
       return HoldingBarcode.createCode(material.getClassification(), copyNumber);
    }
 
@@ -87,7 +87,7 @@ public class Holding {
 
    @Override
    public int hashCode() {
-      return getBarCode().hashCode();
+      return getBarcode().hashCode();
    }
 
    @Override
@@ -97,7 +97,7 @@ public class Holding {
       if (this.getClass() != object.getClass())
          return false;
       Holding that = (Holding)object;
-      return this.getBarCode().equals(that.getBarCode());
+      return this.getBarcode().equals(that.getBarcode());
    }
 
    @Override

@@ -20,7 +20,7 @@ public class LibraryDataTest {
 
    @Test
    public void deleteAllRemovesAllPatrons() {
-      patronService.patronAccess.add(new Patron("1", ""));
+      patronService.patronAccess.add(new Patron("", "1"));
       branchService.add("2");
       MaterialDetails material = new MaterialDetails("3", "", "", "", "");
       when(classificationApi.getMaterialDetails("3")).thenReturn(material);

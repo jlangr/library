@@ -8,12 +8,12 @@ import org.junit.*;
 
 public class HoldingMapTest {
    private HoldingMap map;
-   private static final Holding THE_TRIAL_HOLDING = new Holding(MaterialTestData.THE_TRIAL);
-   private static final Holding AGILE_JAVA_HOLDING = new Holding(MaterialTestData.AGILE_JAVA);
+   private Holding holding;
 
    @Before
    public void initialize() {
       map = new HoldingMap();
+      holding = new HoldingBuilder().create();
    }
 
    @Test
@@ -28,69 +28,73 @@ public class HoldingMapTest {
 
    @Test
    public void containsFailsWhenHoldingNotFound() {
-      assertFalse(map.contains(THE_TRIAL_HOLDING));
+      assertFalse(map.contains(holding));
    }
 
    @Test
    public void containsAddedHolding() {
-      map.add(THE_TRIAL_HOLDING);
+      map.add(holding);
 
-      assertTrue(map.contains(THE_TRIAL_HOLDING));
+      assertTrue(map.contains(holding));
    }
 
    @Test
    public void sizeIncrementedOnAddingHolding() {
-      map.add(THE_TRIAL_HOLDING);
+      map.add(holding);
 
       assertThat(map.size(), equalTo(1));
    }
 
    @Test
    public void retrievesHoldingByBarcode() {
-      map.add(THE_TRIAL_HOLDING);
+      map.add(holding);
 
-      Holding retrieved = map.get(THE_TRIAL_HOLDING.getBarCode());
+      Holding retrieved = map.get(holding.getBarcode());
 
-      assertSame(retrieved, THE_TRIAL_HOLDING);
+      assertSame(retrieved, holding);
    }
 
    @Test
    public void returnsAllHoldings() {
-      map.add(THE_TRIAL_HOLDING);
-      map.add(AGILE_JAVA_HOLDING);
+      Holding holdingA = new HoldingBuilder().withClassification("a").create();
+      Holding holdingB = new HoldingBuilder().withClassification("b").create();
+      map.add(holdingA);
+      map.add(holdingB);
 
       Collection<Holding> holdings = map.holdings();
 
-      assertThat(holdings, hasExactlyItemsInAnyOrder(THE_TRIAL_HOLDING, AGILE_JAVA_HOLDING));
+      assertThat(holdings, hasExactlyItemsInAnyOrder(holdingA, holdingB));
    }
 
    @Test
    public void removeHolding() {
-      map.add(THE_TRIAL_HOLDING);
+      map.add(holding);
 
-      map.remove(THE_TRIAL_HOLDING);
+      map.remove(holding);
 
-      assertFalse(map.contains(THE_TRIAL_HOLDING));
+      assertFalse(map.contains(holding));
    }
 
    @Test
    public void removeHoldingDecrementsSize() {
-      map.add(THE_TRIAL_HOLDING);
+      map.add(holding);
 
-      map.remove(THE_TRIAL_HOLDING);
+      map.remove(holding);
 
       assertThat(map.size(), equalTo(0));
    }
 
    @Test
    public void supportsIteration() {
-      map.add(THE_TRIAL_HOLDING);
-      map.add(AGILE_JAVA_HOLDING);
+      Holding holdingA = new HoldingBuilder().withClassification("a").create();
+      Holding holdingB = new HoldingBuilder().withClassification("b").create();
+      map.add(holdingA);
+      map.add(holdingB);
 
       Collection<Holding> retrieved = new ArrayList<Holding>();
       for (Holding holding: map)
          retrieved.add(holding);
 
-      assertThat(retrieved, hasExactlyItemsInAnyOrder(THE_TRIAL_HOLDING, AGILE_JAVA_HOLDING));
+      assertThat(retrieved, hasExactlyItemsInAnyOrder(holdingA, holdingB));
    }
 }
