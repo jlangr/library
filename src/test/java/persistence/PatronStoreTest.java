@@ -1,14 +1,16 @@
 package persistence;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import java.util.*;
+import static testutil.CollectionsUtil.soleElement;
+import static util.matchers.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
+import java.util.Collection;
 import org.junit.*;
-import testutil.*;
 import domain.core.*;
 
 public class PatronStoreTest {
    private PatronStore store;
-   private static Patron joe = new Patron("p1", "joe");
+   private static Patron patronSmith = new Patron("p1", "joe");
 
    @Before
    public void initialize() {
@@ -18,88 +20,74 @@ public class PatronStoreTest {
 
    @Test
    public void persistsAddedPatron() {
-      store.add(joe);
+      store.add(patronSmith);
 
       Collection<Patron> patrons = store.getAll();
 
-      assertEquals(joe, CollectionsUtil.soleElement(patrons));
+      assertThat(soleElement(patrons), equalTo(patronSmith));
    }
 
    @Test
-   public void assignsIdToBranch() {
+   public void assignsId() {
       Patron patron = new Patron("name");
+
       store.add(patron);
+
       assertTrue(patron.getId().startsWith("p"));
    }
 
    @Test
    public void assignedIdIsUnique() {
       Patron patronA = new Patron("a");
-      store.add(patronA);
-
       Patron patronB = new Patron("b");
+
+      store.add(patronA);
       store.add(patronB);
 
-      assertFalse(patronA.getId().equals(patronB.getId()));
-   }
-   
-   @Test
-   public void doesNotOverwriteIdIfExists() {
-      Patron patron = new Patron("p12345", "a");
-      
-      store.add(patron);
-      
-      assertNotNull(store.find("p12345"));
+      assertThat(patronA.getId(), not(equalTo(patronB.getId())));
    }
 
    @Test
-   public void returnsRetrievedPatronAsNewInstance() {
-      store.add(joe);
-      store = new PatronStore();
+   public void doesNotOverwriteExistingId() {
+      Patron patron = new Patron("p12345", "");
 
-      Collection<Patron> patrons = store.getAll();
-
-      assertNotSame(joe, CollectionsUtil.soleElement(patrons));
-   }
-
-   @Test
-   public void storesHoldingsAddedToPatron() {
-      Holding holding = new Holding(MaterialTestData.THE_TRIAL, Branch.CHECKED_OUT);
-      store.add(joe);
-      store.addHoldingToPatron(joe, holding);
-
-      Collection<Patron> patrons = store.getAll();
-
-      Patron patron = CollectionsUtil.soleElement(patrons);
-      HoldingMap holdings = patron.holdings();
-      assertEquals(1, holdings.size());
-      Holding retrieved = holdings.get(holding.getBarcode());
-      assertEquals(MaterialTestData.THE_TRIAL, retrieved.getMaterial());
-      assertEquals(Branch.CHECKED_OUT, retrieved.getBranch());
-   }
-
-   @Test(expected = PatronNotFoundException.class)
-   public void throwsWhenAddHoldingButPatronDoesNotExist() {
-      store.addHoldingToPatron(joe, new Holding(MaterialTestData.THE_TRIAL, Branch.CHECKED_OUT));
-   }
-
-   @Test
-   public void findsPersistedPatronById() {
-      Patron patron = new Patron("abc");
       store.add(patron);
 
-      Patron found = store.find(patron.getId());
-
-      assertEquals("abc", found.getName());
+      assertThat(store.find("p12345").getId(), equalTo("p12345"));
    }
 
    @Test
    public void returnsPersistedPatronAsNewInstance() {
-      Patron patron = new Patron("p1", "Joe");
-      store.add(patron);
+      store.add(patronSmith);
 
-      Patron found = store.find("p1");
+      Patron found = store.find(patronSmith.getId());
 
-      assertNotSame(patron, found);
+      assertThat(found, not(sameInstance(patronSmith)));
+   }
+
+   @Test
+   public void storesHoldingsAddedToPatron() {
+      Holding holding = new HoldingBuilder().create();
+      store.add(patronSmith);
+      store.addHoldingToPatron(patronSmith, holding);
+
+      Patron patron = store.find(patronSmith.getId());
+
+      // TODO ew
+      assertThat(patron.holdings().holdings(), hasExactlyItemsInAnyOrder(holding));
+   }
+
+   @Test(expected = PatronNotFoundException.class)
+   public void throwsOnAddingHoldingToNonexistentPatron() {
+      store.addHoldingToPatron(patronSmith, new HoldingBuilder().create());
+   }
+
+   @Test
+   public void findsPersistedPatronById() {
+      store.add(patronSmith);
+
+      Patron found = store.find(patronSmith.getId());
+
+      assertThat(found.getName(), equalTo(patronSmith.getName()));
    }
 }

@@ -17,6 +17,7 @@ public class CollectionsUtil {
       return sole;
    }
 
+   // TODO use hasExactlyItems instead
    public static <T> void assertSoleElement(Collection<T> collection, Object expected) {
       Iterator<T> it = collection.iterator();
       Assert.assertTrue(NO_ELEMENTS, it.hasNext());
