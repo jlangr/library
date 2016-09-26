@@ -6,7 +6,6 @@ import static util.matchers.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
 import java.util.Collection;
 import org.junit.*;
 import domain.core.Branch;
-import testutil.CollectionsUtil;
 
 public class BranchStoreTest {
    private BranchStore store;
@@ -74,7 +73,6 @@ public class BranchStoreTest {
 
       Collection<Branch> branches = store.getAll();
 
-      assertEquals(branch, CollectionsUtil.soleElement(branches));
       assertThat(branches, hasExactlyItemsInAnyOrder(branch));
    }
 

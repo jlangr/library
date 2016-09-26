@@ -1,6 +1,6 @@
 package util;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static util.matchers.LessThan.lessThan;
 
@@ -22,7 +22,7 @@ public class TimestampSourceTest {
    public void retrievesSinglePushedTime() {
       TimestampSource.queueNextTime(NEW_YEARS_DAY);
 
-      assertThat(TimestampSource.now(), is(NEW_YEARS_DAY));
+      assertThat(TimestampSource.now(), equalTo(NEW_YEARS_DAY));
    }
 
    @Test
@@ -31,22 +31,22 @@ public class TimestampSourceTest {
       TimestampSource.queueNextTime(NEW_YEARS_DAY);
       TimestampSource.queueNextTime(groundhogDay);
 
-      assertThat(TimestampSource.now(), is(NEW_YEARS_DAY));
-      assertThat(TimestampSource.now(), is(groundhogDay));
+      assertThat(TimestampSource.now(), equalTo(NEW_YEARS_DAY));
+      assertThat(TimestampSource.now(), equalTo(groundhogDay));
    }
 
    @Test
    public void isNotExhaustedWhenTimeQueued() {
       TimestampSource.queueNextTime(NEW_YEARS_DAY);
-      assertThat(TimestampSource.isExhausted(), is(false));
+      assertThat(TimestampSource.isExhausted(), equalTo(false));
    }
 
    @Test
    public void isExhaustedWhenNoTimeQueued() {
-      assertThat(TimestampSource.isExhausted(), is(true));
+      assertThat(TimestampSource.isExhausted(), equalTo(true));
       TimestampSource.queueNextTime(NEW_YEARS_DAY);
       TimestampSource.now();
-      assertThat(TimestampSource.isExhausted(), is(true));
+      assertThat(TimestampSource.isExhausted(), equalTo(true));
    }
 
    @Test
