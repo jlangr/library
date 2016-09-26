@@ -1,6 +1,5 @@
 package domain.core;
 
-import static domain.core.MaterialTestData.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.*;
@@ -10,9 +9,25 @@ import com.loc.material.api.*;
 import testutil.*;
 import util.*;
 
-// TODO remove constants and use builder
+/*
+This test class is a mess. Some of the opportunities for cleanup:
+
+ - AAA used but no visual separation
+ - seeming use of AAA but it's not really
+ - unnecessary code
+ - odd constants
+ - can data be created in the test?
+ - poor / inconsistent test names
+ - comments in tests (are they even true)?
+ - multiple behaviors/asserts per test
+ - code in the wrong place / opportunities for reuse of existing code
+ */
+
 public class HoldingTest {
-   private Holding holding;
+   private static final MaterialDetails THE_TRIAL = new MaterialDetails("10", "", "10", "", "");
+   private static final MaterialDetails DR_STRANGELOVE = new MaterialDetails("12", "", "11", "", MaterialType.DVD, "");
+   private static final MaterialDetails THE_REVENANT = new MaterialDetails("12", "", "11", "", MaterialType.NewReleaseDVD, "");
+   private Holding h;
    private static final Date TODAY = new Date();
    private static final int COPY_NUMBER_1 = 1;
    private Branch eastBranch = new Branch("East");
@@ -20,50 +35,47 @@ public class HoldingTest {
 
    @Before
    public void setUp() {
-      holding = new Holding(THE_TRIAL, eastBranch, COPY_NUMBER_1);
+      h = new Holding(THE_TRIAL, eastBranch, COPY_NUMBER_1);
    }
 
    @Test
    public void branchDefaultsToCheckedOutWhenCreated() {
       Holding holding = new Holding(THE_TRIAL);
-
       assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
    }
 
    @Test
    public void copyNumberDefaultsTo1WhenCreated() {
       Holding holding = new Holding(THE_TRIAL, eastBranch);
-
       assertThat(holding.getCopyNumber(), equalTo(1));
    }
 
    @Test
    public void changesBranchOnTransfer() {
-      holding.transfer(westBranch);
-
-      assertThat(holding.getBranch(), equalTo(westBranch));
+      h.transfer(westBranch);
+      assertThat(h.getBranch(), equalTo(westBranch));
    }
 
    @Test
    public void ck() {
-      holding.checkOut(TODAY);
-      assertThat(holding.dateCheckedOut(), equalTo(TODAY));
-      assertTrue(holding.dateDue().after(TODAY));
-      assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
-      assertFalse(holding.isAvailable());
+      h.checkOut(TODAY);
+      assertThat(h.dateCheckedOut(), equalTo(TODAY));
+      assertTrue(h.dateDue().after(TODAY));
+      assertThat(h.getBranch(), equalTo(Branch.CHECKED_OUT));
+      assertFalse(h.isAvailable());
 
-      holding.checkOut(TODAY);
+      h.checkOut(TODAY);
       Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
-      holding.checkIn(tomorrow, eastBranch);
-      assertThat(holding.dateLastCheckedIn(), equalTo(tomorrow));
-      assertTrue(holding.isAvailable());
-      assertThat(holding.getBranch(), equalTo(eastBranch));
+      h.checkIn(tomorrow, eastBranch);
+      assertThat(h.dateLastCheckedIn(), equalTo(tomorrow));
+      assertTrue(h.isAvailable());
+      assertThat(h.getBranch(), equalTo(eastBranch));
    }
 
    @Test
    public void returnDateForStandardBook() {
-      holding.checkOut(TODAY);
-      Date dateDue = holding.dateDue();
+      h.checkOut(TODAY);
+      Date dateDue = h.dateDue();
       assertDateEquals(addDays(TODAY, MaterialType.Book.getCheckoutPeriod()), dateDue);
    }
 
@@ -72,45 +84,39 @@ public class HoldingTest {
       // movie
       checkOutToday(DR_STRANGELOVE, eastBranch);
       Date expected = addDays(TODAY, MaterialType.DVD.getCheckoutPeriod());
-      assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), holding.dateDue());
+      assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), h.dateDue());
 
       // childrens movie
-      checkOutToday(THE_TRIAL_NEW_EDITION, eastBranch);
-      expected = addDays(TODAY, MaterialType.Book.getCheckoutPeriod());
-      assertDateEquals(expected, holding.dateDue());
+      checkOutToday(THE_REVENANT, eastBranch);
+      expected = addDays(TODAY, MaterialType.NewReleaseDVD.getCheckoutPeriod());
+      assertDateEquals(expected, h.dateDue());
    }
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedSameDay() {
       checkOutToday(THE_TRIAL, eastBranch);
-
-      int daysLate = holding.checkIn(TODAY, eastBranch);
-
+      int daysLate = h.checkIn(TODAY, eastBranch);
       assertThat(daysLate, equalTo(0));
    }
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedOnDateDue() {
       checkOutToday(THE_TRIAL, eastBranch);
-
-      int daysLate = holding.checkIn(holding.dateDue(), eastBranch);
-
+      int daysLate = h.checkIn(h.dateDue(), eastBranch);
       assertThat(daysLate, equalTo(0));
    }
 
    @Test
    public void answersDaysLateWhenReturnedAfterDueDate() {
       checkOutToday(THE_TRIAL, eastBranch);
-      Date threeDaysLate = DateUtil.addDays(holding.dateDue(), 3);
-
-      int daysLate = holding.checkIn(threeDaysLate, eastBranch);
-
-      assertThat(daysLate, equalTo(3));
+      Date date = DateUtil.addDays(h.dateDue(), 3);
+      int days = h.checkIn(date, eastBranch);
+      assertThat(days, equalTo(3));
    }
 
    private void checkOutToday(MaterialDetails material, Branch branch) {
-      holding = new Holding(material, branch);
-      holding.checkOut(TODAY);
+      h = new Holding(material, branch);
+      h.checkOut(TODAY);
    }
 
    static void assertMaterial(MaterialDetails expected, Holding holding) {
