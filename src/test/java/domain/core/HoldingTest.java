@@ -14,13 +14,14 @@ This test class is a mess. Some of the opportunities for cleanup:
 
  - AAA used but no visual separation
  - seeming use of AAA but it's not really
- - unnecessary code
- - odd constants
+ - unnecessary code (null checks? try/catch?)
+ - constant names that obscure relevant information
  - can data be created in the test?
  - poor / inconsistent test names
  - comments in tests (are they even true)?
  - multiple behaviors/asserts per test
  - code in the wrong place / opportunities for reuse of existing code
+ - dead code
  */
 
 public class HoldingTest {
@@ -41,6 +42,7 @@ public class HoldingTest {
    @Test
    public void branchDefaultsToCheckedOutWhenCreated() {
       Holding holding = new Holding(THE_TRIAL);
+      assertThat(holding, not(nullValue()));
       assertThat(holding.getBranch(), equalTo(Branch.CHECKED_OUT));
    }
 
@@ -108,10 +110,15 @@ public class HoldingTest {
 
    @Test
    public void answersDaysLateWhenReturnedAfterDueDate() {
-      checkOutToday(THE_TRIAL, eastBranch);
-      Date date = DateUtil.addDays(h.dateDue(), 3);
-      int days = h.checkIn(date, eastBranch);
-      assertThat(days, equalTo(3));
+      try {
+         checkOutToday(THE_TRIAL, eastBranch);
+         Date date = DateUtil.addDays(h.dateDue(), 3);
+         int days = h.checkIn(date, eastBranch);
+         assertThat(days, equalTo(3));
+      }
+      catch (RuntimeException notReallyExpected) {
+         fail();
+      }
    }
 
    private void checkOutToday(MaterialDetails material, Branch branch) {
@@ -120,7 +127,11 @@ public class HoldingTest {
    }
 
    static void assertMaterial(MaterialDetails expected, Holding holding) {
-      MaterialTestUtil.assertMaterialsEqual(expected, holding.getMaterial());
+      MaterialDetails actual = holding.getMaterial();
+      assertEquals(expected.getAuthor(), actual.getAuthor());
+      assertEquals(expected.getClassification(), actual.getClassification());
+      assertEquals(expected.getTitle(), actual.getTitle());
+      assertEquals(expected.getYear(), actual.getYear());
    }
 
    public static Date addDays(Date date, int days) {

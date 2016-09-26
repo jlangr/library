@@ -2,6 +2,7 @@ package domain.core;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static util.matchers.HasExactlyItemsInAnyOrder.*;
 import org.junit.*;
 import testutil.*;
 
@@ -34,7 +35,7 @@ public class PatronTest {
 
       jane.add(holding);
 
-      CollectionsUtil.assertSoleElement(jane.holdings().holdings(), holding);
+      assertThat(jane.holdings().holdings(), hasExactlyItemsInAnyOrder(holding));
    }
 
    @Test

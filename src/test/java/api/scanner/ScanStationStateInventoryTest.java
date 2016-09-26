@@ -1,19 +1,11 @@
 package api.scanner;
 
-import static api.scanner.ScanStationStateInventory.MSG_COMPLETE_INVENTORY_FIRST;
-import static api.scanner.ScanStationStateInventory.MSG_SCANNED_HOLDING;
-import static api.scanner.ScanStationTestData.BRANCH_WEST;
-import static api.scanner.ScanStationTestData.BRANCH_WEST_ID;
-import static api.scanner.ScanStationTestData.PATRON_JOE_ID;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static api.scanner.ScanStationStateInventory.*;
+import static api.scanner.ScanStationTestData.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import org.junit.*;
-
+import static org.mockito.Mockito.*;
+import org.junit.Test;
 import domain.core.Branch;
 
 public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
@@ -34,31 +26,18 @@ public class ScanStationStateInventoryTest extends ScanStationStateTestBase {
       assertStateUnchanged();
    }
 
-//   @Test
-//   public void changesBranchWhenBranchIdScanned() {
-//      assertThat(scanner.getBranchId(), is(not(BRANCH_WEST_ID)));
-//      when(branchService.find(BRANCH_WEST_ID)).thenReturn(
-//            new Branch("West", BRANCH_WEST_ID));
-//
-//      state.scanBranchId(BRANCH_WEST_ID);
-//
-//      assertThat(scanner.getBranchId(), is(BRANCH_WEST_ID));
-//      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO,
-//            "West"));
-//      assertStateUnchanged();
-//   }
-
    @Test
-   public void changesToInventoryReconciliationStateWhenBranchIdScanned() {
-      assertThat(scanner.getBranchId(), is(not(BRANCH_WEST_ID)));
-      Branch west = new Branch("West");
-      west.setScanCode(BRANCH_WEST_ID);
-      when(branchService.find(BRANCH_WEST_ID)).thenReturn(west);
+   public void changesBranchWhenBranchIdScanned() {
+      assertThat(scanner.getBranchId(), not(equalTo(BRANCH_WEST_ID)));
+      when(branchService.find(BRANCH_WEST_ID)).thenReturn(
+            new Branch("West", BRANCH_WEST_ID));
 
       state.scanBranchId(BRANCH_WEST_ID);
 
-      assertThat(scanner.getBranchId(), is(BRANCH_WEST_ID));
-      assertCurrentState(ScanStationStateReconciliation.class);
+      assertThat(scanner.getBranchId(), equalTo(BRANCH_WEST_ID));
+      assertMessageDisplayed(String.format(ScanStation.MSG_BRANCH_SET_TO,
+            "West"));
+      assertStateUnchanged();
    }
 
    @Test

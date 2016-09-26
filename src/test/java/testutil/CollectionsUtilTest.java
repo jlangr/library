@@ -24,16 +24,6 @@ public class CollectionsUtilTest {
       Object soleElement = CollectionsUtil.soleElement(collection);
 
       assertThat(soleElement, equalTo("a"));
-      CollectionsUtil.assertSoleElement(collection, "a");
-   }
-
-   @Test
-   public void soleElementThrowsWhenWrongElement() {
-      exceptionRule.expect(org.junit.ComparisonFailure.class);
-      exceptionRule.expectMessage("expected:<[b]> but was:<[a]>");
-      collection.add("a");
-
-      CollectionsUtil.assertSoleElement(collection, "b");
    }
 
    @Test
@@ -45,14 +35,6 @@ public class CollectionsUtilTest {
    }
 
    @Test
-   public void assertSoleElementThrowsTestFailureWhenNoElements() {
-      exceptionRule.expect(AssertionError.class);
-      exceptionRule.expectMessage(CollectionsUtil.NO_ELEMENTS);
-
-      CollectionsUtil.assertSoleElement(collection, "a");
-   }
-
-   @Test
    public void soleElementThrowsWhenMoreThanOneElement() {
       exceptionRule.expect(AssertionError.class);
       exceptionRule.expectMessage(CollectionsUtil.MORE_THAN_ONE_ELEMENT);
@@ -60,15 +42,5 @@ public class CollectionsUtilTest {
       collection.add("b");
 
       CollectionsUtil.soleElement(collection);
-   }
-
-   @Test
-   public void assertSoleElementThrowsFailureWhenMoreThanOneElement() {
-      exceptionRule.expect(AssertionError.class);
-      exceptionRule.expectMessage(CollectionsUtil.MORE_THAN_ONE_ELEMENT);
-      collection.add("a");
-      collection.add("b");
-
-      CollectionsUtil.assertSoleElement(collection, "a");
    }
 }

@@ -14,14 +14,12 @@ public class ScanStationStateInventory extends AbstractScanStationState
    @Override
    public void scanBranchId(String barcode) {
       scanStation.scanBranchId(barcode);
-      scanStation.setCurrentState(
-            new ScanStationStateReconciliation(scanStation));
    }
 
    @Override
    public void scanHolding(String barcode) {
       String holdingId = barcode;
-      // TODO
+      // TODO ?? what
       scanStation.getLibrarySystem().add(holdingId, scanStation.getBranchId());
       scanStation.showMessage(String.format(MSG_SCANNED_HOLDING, holdingId));
    }
