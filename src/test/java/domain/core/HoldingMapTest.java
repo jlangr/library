@@ -1,22 +1,15 @@
 package domain.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import testutil.CollectionsUtil;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
+import static util.matchers.HasExactlyItemsInAnyOrder.hasExactlyItemsInAnyOrder;
+import java.util.*;
+import org.junit.*;
 
 public class HoldingMapTest {
    private HoldingMap map;
-   private static final Holding HOLDING1 = new Holding(MaterialTestData.THE_TRIAL);
-   private static final Holding HOLDING2 = new Holding(MaterialTestData.AGILE_JAVA);
+   private static final Holding THE_TRIAL_HOLDING = new Holding(MaterialTestData.THE_TRIAL);
+   private static final Holding AGILE_JAVA_HOLDING = new Holding(MaterialTestData.AGILE_JAVA);
 
    @Before
    public void initialize() {
@@ -24,90 +17,80 @@ public class HoldingMapTest {
    }
 
    @Test
-   public void create() {
-      assertSize(0);
+   public void isEmptyWhenCreated() {
+      assertTrue(map.isEmpty());
+   }
+
+   @Test
+   public void hasSizeZeroWhenCreated() {
+      assertThat(map.size(), equalTo(0));
    }
 
    @Test
    public void containsFailsWhenHoldingNotFound() {
-      assertFalse(map.contains(HOLDING1));
+      assertFalse(map.contains(THE_TRIAL_HOLDING));
    }
 
    @Test
    public void containsAddedHolding() {
-      map.add(HOLDING1);
-      assertTrue(map.contains(HOLDING1));
+      map.add(THE_TRIAL_HOLDING);
 
+      assertTrue(map.contains(THE_TRIAL_HOLDING));
    }
 
    @Test
    public void sizeIncrementedOnAddingHolding() {
-      map.add(HOLDING1);
-      assertSize(1);
+      map.add(THE_TRIAL_HOLDING);
+
+      assertThat(map.size(), equalTo(1));
    }
 
    @Test
    public void retrievesHoldingByBarcode() {
-      map.add(HOLDING1);
+      map.add(THE_TRIAL_HOLDING);
 
-      Holding retrieved = map.get(HOLDING1.getBarCode());
+      Holding retrieved = map.get(THE_TRIAL_HOLDING.getBarCode());
 
-      assertSame(retrieved, HOLDING1);
-   }
-
-   @Test
-   public void supportsMultipleHoldings() {
-      map.add(HOLDING1);
-      map.add(HOLDING2);
-
-      assertSize(2);
-      assertTrue(map.contains(HOLDING1));
-      assertTrue(map.contains(HOLDING2));
+      assertSame(retrieved, THE_TRIAL_HOLDING);
    }
 
    @Test
    public void returnsAllHoldings() {
-      map.add(HOLDING1);
-      map.add(HOLDING2);
+      map.add(THE_TRIAL_HOLDING);
+      map.add(AGILE_JAVA_HOLDING);
 
       Collection<Holding> holdings = map.holdings();
 
-      assertTrue(holdings.contains(HOLDING1));
-      assertTrue(holdings.contains(HOLDING2));
+      assertThat(holdings, hasExactlyItemsInAnyOrder(THE_TRIAL_HOLDING, AGILE_JAVA_HOLDING));
    }
 
    @Test
    public void removeHolding() {
-      map.add(HOLDING1);
+      map.add(THE_TRIAL_HOLDING);
 
-      map.remove(HOLDING1);
+      map.remove(THE_TRIAL_HOLDING);
 
-      assertFalse(map.contains(HOLDING1));
+      assertFalse(map.contains(THE_TRIAL_HOLDING));
    }
 
    @Test
    public void removeHoldingDecrementsSize() {
-      map.add(HOLDING1);
+      map.add(THE_TRIAL_HOLDING);
 
-      map.remove(HOLDING1);
+      map.remove(THE_TRIAL_HOLDING);
 
-      assertSize(0);
+      assertThat(map.size(), equalTo(0));
    }
 
    @Test
    public void supportsIteration() {
-      map.add(HOLDING1);
-      map.add(HOLDING2);
+      map.add(THE_TRIAL_HOLDING);
+      map.add(AGILE_JAVA_HOLDING);
 
       Collection<Holding> retrieved = new ArrayList<Holding>();
       for (Holding holding: map)
          retrieved.add(holding);
 
-      CollectionsUtil.containsExactly(retrieved, HOLDING1, HOLDING2);
-   }
-
-   private void assertSize(int expected) {
-      assertEquals(expected == 0, map.isEmpty());
-      assertEquals(expected, map.size());
+      assertThat(retrieved, hasExactlyItemsInAnyOrder(THE_TRIAL_HOLDING, AGILE_JAVA_HOLDING));
    }
 }

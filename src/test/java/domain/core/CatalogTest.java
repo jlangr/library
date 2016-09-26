@@ -1,8 +1,9 @@
 package domain.core;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
+import static util.matchers.HasExactlyItems.hasExactlyItems;
 import java.util.*;
 import org.junit.*;
 import com.loc.material.api.MaterialDetails;
@@ -94,6 +95,6 @@ public class CatalogTest {
       for (Holding holding: catalog)
          results.add(holding.getBarCode());
 
-      assertThat(results, equalTo(asList(barcode1, barcode2)));
+      assertThat(results, hasExactlyItems(barcode1, barcode2));
    }
 }

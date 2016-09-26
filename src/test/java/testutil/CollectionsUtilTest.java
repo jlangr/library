@@ -1,20 +1,16 @@
 package testutil;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import java.util.*;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
+import static org.hamcrest.CoreMatchers.*;
 
 public class CollectionsUtilTest {
    private Collection<Object> collection;
+
+   @Rule
+   public ExpectedException exceptionRule = ExpectedException.none();
 
    @Before
    public void initialize() {
@@ -27,98 +23,52 @@ public class CollectionsUtilTest {
 
       Object soleElement = CollectionsUtil.soleElement(collection);
 
-      assertEquals("a", soleElement);
+      assertThat(soleElement, equalTo("a"));
       CollectionsUtil.assertSoleElement(collection, "a");
    }
 
    @Test
    public void soleElementThrowsWhenWrongElement() {
+      exceptionRule.expect(org.junit.ComparisonFailure.class);
+      exceptionRule.expectMessage("expected:<[b]> but was:<[a]>");
       collection.add("a");
-      try {
-         CollectionsUtil.assertSoleElement(collection, "b");
-      }
-      catch (org.junit.ComparisonFailure expected) {
-         assertEquals("expected:<[b]> but was:<[a]>", expected.getMessage());
-      }
+
+      CollectionsUtil.assertSoleElement(collection, "b");
    }
 
    @Test
    public void soleElementThrowsWhenNoElementsExist() {
-      try {
-         CollectionsUtil.soleElement(collection);
-         fail("expected assertion failure");
-      } catch (AssertionError expected) {
-         assertEquals(testutil.CollectionsUtil.NO_ELEMENTS,
-               expected.getMessage());
-      }
+      exceptionRule.expect(AssertionError.class);
+      exceptionRule.expectMessage(CollectionsUtil.NO_ELEMENTS);
+
+      CollectionsUtil.soleElement(collection);
    }
 
    @Test
    public void assertSoleElementThrowsTestFailureWhenNoElements() {
-      try {
-         CollectionsUtil.assertSoleElement(collection, "a");
-         fail("expected assertion failure");
-      } catch (AssertionError expected) {
-         assertEquals(testutil.CollectionsUtil.NO_ELEMENTS,
-               expected.getMessage());
-      }
+      exceptionRule.expect(AssertionError.class);
+      exceptionRule.expectMessage(CollectionsUtil.NO_ELEMENTS);
+
+      CollectionsUtil.assertSoleElement(collection, "a");
    }
 
    @Test
    public void soleElementThrowsWhenMoreThanOneElement() {
+      exceptionRule.expect(AssertionError.class);
+      exceptionRule.expectMessage(CollectionsUtil.MORE_THAN_ONE_ELEMENT);
       collection.add("a");
       collection.add("b");
-      try {
-         CollectionsUtil.soleElement(collection);
-         fail("expected assertion failure");
-      } catch (AssertionError expected) {
-         assertEquals(testutil.CollectionsUtil.MORE_THAN_ONE_ELEMENT,
-               expected.getMessage());
-      }
+
+      CollectionsUtil.soleElement(collection);
    }
 
    @Test
    public void assertSoleElementThrowsFailureWhenMoreThanOneElement() {
-      try {
-         collection.add("a");
-         collection.add("b");
-         CollectionsUtil.assertSoleElement(collection, "a");
-         fail("expected assertion failure");
-      } catch (AssertionError expected) {
-         assertEquals(testutil.CollectionsUtil.MORE_THAN_ONE_ELEMENT,
-               expected.getMessage());
-      }
-   }
+      exceptionRule.expect(AssertionError.class);
+      exceptionRule.expectMessage(CollectionsUtil.MORE_THAN_ONE_ELEMENT);
+      collection.add("a");
+      collection.add("b");
 
-   @Test
-   public void containsExactlyReturnsTrueWithMatchingSingleElement() {
-      Set<Object> set = new HashSet<Object>();
-      set.add("c");
-
-      assertTrue(CollectionsUtil.containsExactly(set, "c"));
-   }
-
-   @Test
-   public void containsExactlyReturnsFalseWithNoMatchingElement() {
-      Set<Object> set = new HashSet<Object>();
-      set.add("c");
-
-      assertFalse(CollectionsUtil.containsExactly(set, "b"));
-   }
-
-   @Test
-   public void containsExactlyPassesWithAllMatchingMultipleElements() {
-      Set<Object> set = new HashSet<Object>();
-      set.add("c");
-      set.add("a");
-
-      assertTrue(CollectionsUtil.containsExactly(set, "a", "c"));
-   }
-
-   @Test
-   public void containsExactlyFalseWithNotAllMatchingMultipleElements() {
-      Set<Object> set = new HashSet<Object>();
-      set.add("c");
-      assertFalse(CollectionsUtil.containsExactly(set, "a", "c"));
+      CollectionsUtil.assertSoleElement(collection, "a");
    }
 }

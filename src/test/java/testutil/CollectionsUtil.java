@@ -24,16 +24,4 @@ public class CollectionsUtil {
       Assert.assertFalse(MORE_THAN_ONE_ELEMENT, it.hasNext());
       Assert.assertEquals(expected, first);
    }
-
-   // TODO use custom matcher
-
-   @SafeVarargs
-   public static <T> boolean containsExactly(Collection<T> collection, T... objects) {
-      if (collection.size() != objects.length)
-         return false;
-      for (int i = 0; i < objects.length; i++)
-         if (!collection.contains(objects[i]))
-            return false;
-      return true;
-   }
 }

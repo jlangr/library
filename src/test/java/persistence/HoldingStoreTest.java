@@ -3,10 +3,10 @@ package persistence;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
-
+import static util.matchers.HasExactlyItemsInAnyOrder.*;
+import static org.junit.Assert.*;
 import java.util.Collection;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import domain.core.*;
@@ -48,7 +48,7 @@ public class HoldingStoreTest {
 
       Collection<Holding> retrieved = store.getAll();
 
-      CollectionsUtil.containsExactly(retrieved, savedHolding, holding2);
+      assertThat(retrieved, hasExactlyItemsInAnyOrder(savedHolding, holding2));
    }
 
    @Test

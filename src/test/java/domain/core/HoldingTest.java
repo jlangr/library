@@ -15,11 +15,12 @@ public class HoldingTest {
    private Holding holding;
    private static final Date TODAY = new Date();
    private static final int COPY_NUMBER_1 = 1;
-   private static final Branch EAST_BRANCH = new Branch("East");
+   private Branch eastBranch = new Branch("East");
+   private Branch westBranch = new Branch("West");
 
    @Before
    public void setUp() {
-      holding = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, COPY_NUMBER_1);
+      holding = new Holding(THE_TRIAL, eastBranch, COPY_NUMBER_1);
    }
 
    @Test
@@ -31,16 +32,16 @@ public class HoldingTest {
 
    @Test
    public void copyNumberDefaultsTo1WhenCreated() {
-      Holding holding = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST);
+      Holding holding = new Holding(THE_TRIAL, eastBranch);
 
       assertThat(holding.getCopyNumber(), equalTo(1));
    }
 
    @Test
    public void changesBranchOnTransfer() {
-      holding.transfer(BranchTest.BRANCH_WEST);
+      holding.transfer(westBranch);
 
-      assertThat(holding.getBranch(), equalTo(BranchTest.BRANCH_WEST));
+      assertThat(holding.getBranch(), equalTo(westBranch));
    }
 
    @Test
@@ -53,10 +54,10 @@ public class HoldingTest {
 
       holding.checkOut(TODAY);
       Date tomorrow = new Date(TODAY.getTime() + 60L + 60 * 1000 * 24);
-      holding.checkIn(tomorrow, EAST_BRANCH);
+      holding.checkIn(tomorrow, eastBranch);
       assertThat(holding.dateLastCheckedIn(), equalTo(tomorrow));
       assertTrue(holding.isAvailable());
-      assertThat(holding.getBranch(), equalTo(EAST_BRANCH));
+      assertThat(holding.getBranch(), equalTo(eastBranch));
    }
 
    @Test
@@ -69,40 +70,40 @@ public class HoldingTest {
    @Test
    public void testSomething() {
       // movie
-      checkOutToday(DR_STRANGELOVE, BranchTest.BRANCH_EAST);
+      checkOutToday(DR_STRANGELOVE, eastBranch);
       Date expected = addDays(TODAY, MaterialType.DVD.getCheckoutPeriod());
       assertDateEquals(addDays(TODAY, MaterialType.DVD.getCheckoutPeriod()), holding.dateDue());
 
       // childrens movie
-      checkOutToday(THE_TRIAL_NEW_EDITION, BranchTest.BRANCH_EAST);
+      checkOutToday(THE_TRIAL_NEW_EDITION, eastBranch);
       expected = addDays(TODAY, MaterialType.Book.getCheckoutPeriod());
       assertDateEquals(expected, holding.dateDue());
    }
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedSameDay() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(THE_TRIAL, eastBranch);
 
-      int daysLate = holding.checkIn(TODAY, BranchTest.BRANCH_EAST);
+      int daysLate = holding.checkIn(TODAY, eastBranch);
 
       assertThat(daysLate, equalTo(0));
    }
 
    @Test
    public void answersDaysLateOfZeroWhenReturnedOnDateDue() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(THE_TRIAL, eastBranch);
 
-      int daysLate = holding.checkIn(holding.dateDue(), BranchTest.BRANCH_EAST);
+      int daysLate = holding.checkIn(holding.dateDue(), eastBranch);
 
       assertThat(daysLate, equalTo(0));
    }
 
    @Test
    public void answersDaysLateWhenReturnedAfterDueDate() {
-      checkOutToday(THE_TRIAL, BranchTest.BRANCH_EAST);
+      checkOutToday(THE_TRIAL, eastBranch);
       Date threeDaysLate = DateUtil.addDays(holding.dateDue(), 3);
 
-      int daysLate = holding.checkIn(threeDaysLate, BranchTest.BRANCH_EAST);
+      int daysLate = holding.checkIn(threeDaysLate, eastBranch);
 
       assertThat(daysLate, equalTo(3));
    }
@@ -132,11 +133,11 @@ public class HoldingTest {
 
    @Test
    public void equality() {
-      Holding holding1 = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, 1);
-      Holding holding1Copy1 = new Holding(THE_TRIAL, BranchTest.BRANCH_WEST, 1); // diff loc but same copy
+      Holding holding1 = new Holding(THE_TRIAL, eastBranch, 1);
+      Holding holding1Copy1 = new Holding(THE_TRIAL, westBranch, 1); // diff loc but same copy
       Holding holding1Copy2 = new Holding(THE_TRIAL, Branch.CHECKED_OUT, 1);
-      Holding holding2 = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST, 2); // 2nd copy
-      Holding holding1Subtype = new Holding(THE_TRIAL, BranchTest.BRANCH_EAST,
+      Holding holding2 = new Holding(THE_TRIAL, eastBranch, 2); // 2nd copy
+      Holding holding1Subtype = new Holding(THE_TRIAL, eastBranch,
             1) {
       };
 

@@ -1,38 +1,25 @@
 package domain.core;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
-
 import testutil.EqualityTester;
 
 public class BranchTest {
-   public static final String EAST_NAME = "east";
-   public static final String WEST_NAME = "west";
-   public static final String EAST_SCAN = "b111";
-   public static final String WEST_SCAN = "b222";
-   public static final Branch BRANCH_EAST = new Branch(EAST_NAME);
-   public static final Branch BRANCH_WEST = new Branch(WEST_NAME);
-   private Branch branch;
-
-   @Before
-   public void initialize() {
-      branch = new Branch(EAST_NAME);
-   }
 
    @Test
    public void defaultsIdToEmpty() {
-      assertEquals("", new Branch("alpha").getScanCode());
-   }
-
-   @Test
-   public void initializesNameOnCreation() {
-      assertEquals(EAST_NAME, branch.getName());
+      assertThat(new Branch("alpha").getScanCode(), equalTo(""));
    }
 
    @Test
    public void supportsEquality() {
+      String EAST_NAME = "east";
+      String WEST_NAME = "west";
+      String EAST_SCAN = "b111";
+      String WEST_SCAN = "b222";
+      Branch BRANCH_EAST = new Branch(EAST_NAME);
+      Branch BRANCH_WEST = new Branch(WEST_NAME);
       Branch branch1 = BRANCH_EAST;
       branch1.setScanCode(EAST_SCAN);
       Branch branch1Copy1 = new Branch(EAST_NAME);
@@ -45,7 +32,6 @@ public class BranchTest {
       };
       branch1Subtype.setScanCode(EAST_SCAN);
 
-      new EqualityTester(branch1, branch1Copy1, branch1Copy2, branch2,
-            branch1Subtype).verify();
+      new EqualityTester(branch1, branch1Copy1, branch1Copy2, branch2, branch1Subtype).verify();
    }
 }
